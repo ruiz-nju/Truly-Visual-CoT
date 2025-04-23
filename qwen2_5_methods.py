@@ -8,6 +8,8 @@ from PIL import Image
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
+REFOCUS = "I should refocus on the image."
+
 
 def prepare_qwen2_5_input(messages, processor):
     """
@@ -29,8 +31,11 @@ def prepare_qwen2_5_input(messages, processor):
     return inputs
 
 
-def get_response_qwen2_5(user_prompt, decoded_image, model, processor):
-    image_str = encode_base64(decoded_image)
+def get_response_qwen2_5(
+    user_prompt, image_path, model, processor, existing_generation=None
+):
+    image = Image.open(image_path)
+    image_str = encode_base64(image)
     messages = [
         {
             "role": "user",
@@ -40,6 +45,13 @@ def get_response_qwen2_5(user_prompt, decoded_image, model, processor):
             ],
         }
     ]
+    if existing_generation:
+        messages.append(
+            {
+                "role": "assistant",
+                "content": [{"type": "text", "text": existing_generation}],
+            }
+        )
     text = processor.apply_chat_template(
         messages, tokenize=False, add_generation_prompt=True
     )
@@ -79,11 +91,12 @@ def refocus_qwen2_5(model, processor, user_prompt, image_path, ori_response):
         # 计算均值和熵
         att_map_mean = np.mean(att_map)
         att_map_entropy = calculate_entropy(att_map)
-        atts.append((sentence_idx, att_map, att_map_mean, att_map_entropy))
+        atts.append((sentence_idx + 1, att_map, att_map_mean, att_map_entropy))
         pdb.set_trace()
-
-    sentence_idxs = []
-    for i, (sentence_idx, att_map, att_map_mean, att_map_entropy) in enumerate(atts):
+    refocus_positions = []
+    for i, (refocus_position, att_map, att_map_mean, att_map_entropy) in enumerate(
+        atts
+    ):
         print(f"Sentence {i}: {att_map_mean} {att_map_entropy}")
         if i == 0:
             att_map_mean_former, att_map_entropy_former = att_map_mean, att_map_entropy
@@ -92,12 +105,21 @@ def refocus_qwen2_5(model, processor, user_prompt, image_path, ori_response):
             att_map_mean < att_map_mean_former
             and att_map_entropy < att_map_entropy_former
         ):
-            sentence_idxs.append(sentence_idx)
+            refocus_positions.append(refocus_position)
         att_map_mean_former, att_map_entropy_former = att_map_mean, att_map_entropy
 
-    # TODO: 根据 sentence_idxs 重新生成 response 进行测评
-    pdb.set_trace()
-    raise NotImplementedError
+    # 选取中间一个 refocus_position 重新生成 response
+    refocus_position = refocus_positions[len(refocus_positions) // 2]
+    refocus_response = splited_response[:refocus_position] + [REFOCUS]
+    refocus_response = " ".join(refocus_response)
+    refocus_response = get_response_qwen2_5(
+        user_prompt=user_prompt,
+        image_path=image_path,
+        model=model,
+        processor=processor,
+        existing_generation=refocus_response,
+    )
+    return refocus_position, refocus_response
 
 
 def calculate_entropy(att_map):
@@ -141,7 +163,7 @@ def get_attention_qwen2_5(
             ],
         }
     ]
-
+    pdb.set_trace()
     # 输入预处理
     inputs = prepare_qwen2_5_input(messages, processor).to(model.device, torch.bfloat16)
     general_inputs = prepare_qwen2_5_input(general_messages, processor).to(

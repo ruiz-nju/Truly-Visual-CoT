@@ -6,7 +6,7 @@ import pdb
 from openai import AzureOpenAI, OpenAI
 from openai.types.chat import ChatCompletionContentPartParam, ChatCompletionMessageParam
 from PIL import Image
-from utils.tools import read_json, save_json
+from utils.tools import read_json, save_json, print_info
 from utils.logger import setup_logger
 import time
 import torch
@@ -371,27 +371,25 @@ def extraction_mathvista(
     print("MathVista: Extract Answers - Finish")
 
 
-def print_info(model_name, dataset_name):
-    print(
-        f"""
-    "================================================================"
-    "🚀 Running extract_answer.py"
-    "📦 Model:   {model_name}"
-    "📚 Dataset: {dataset_name}"
-    "⏰ Time:    {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}"
-    "================================================================"
-    """
-    )
-
-
 def main(args):
     model_name = args.model_name
     dataset = args.dataset
-    output_dir = os.path.join("outputs", dataset, model_name)
+    period = args.period
+    if period == "origin":
+        output_dir = os.path.join("outputs_origin", dataset, model_name)
+    elif period == "refocus":
+        output_dir = os.path.join("outputs_refocus", dataset, model_name)
+    else:
+        raise ValueError(f"Period {period} not supported")
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     setup_logger(os.path.join(output_dir, "logs", "extract_answer_log.txt"))
-    print_info(model_name, dataset)
+    print_info(
+        module_name="extract_answer.py",
+        model_name=model_name,
+        dataset_name=dataset,
+        period=period,
+    )
     if dataset == "mathvista":
         output_file_path = os.path.join(output_dir, "extracted_answer.json")
         input_file_path = os.path.join(output_dir, "generated_response.json")
@@ -409,6 +407,12 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--dataset", type=str, default="mathvista", choices=dataset_to_full_name.keys()
+    )
+    parser.add_argument(
+        "--period",
+        type=str,
+        default="origin",
+        choices=["origin", "refocus"],
     )
     args = parser.parse_args()
     main(args)
