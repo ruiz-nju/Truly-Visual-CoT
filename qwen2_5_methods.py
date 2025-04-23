@@ -52,17 +52,9 @@ def get_response_qwen2_5(
                 "content": [{"type": "text", "text": existing_generation}],
             }
         )
-    text = processor.apply_chat_template(
-        messages, tokenize=False, add_generation_prompt=True
+    inputs = prepare_qwen2_5_input(messages=messages, processor=processor).to(
+        DEVICE, torch.bfloat16
     )
-    image_inputs, video_inputs = process_vision_info(messages)
-    inputs = processor(
-        text=[text],
-        images=image_inputs,
-        videos=video_inputs,
-        padding=True,
-        return_tensors="pt",
-    ).to(DEVICE, torch.bfloat16)
     generate_ids = model.generate(**inputs, max_new_tokens=2048, do_sample=False)
     generation = processor.batch_decode(
         generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False
@@ -92,7 +84,6 @@ def refocus_qwen2_5(model, processor, user_prompt, image_path, ori_response):
         att_map_mean = np.mean(att_map)
         att_map_entropy = calculate_entropy(att_map)
         atts.append((sentence_idx + 1, att_map, att_map_mean, att_map_entropy))
-        pdb.set_trace()
     refocus_positions = []
     for i, (refocus_position, att_map, att_map_mean, att_map_entropy) in enumerate(
         atts
@@ -136,7 +127,6 @@ def calculate_entropy(att_map):
 def get_attention_qwen2_5(
     image_str, prompt, cur_generation, general_prompt, model, processor
 ):
-    ATT_LAYER = 22
 
     # 计算cur_sentence attention
     messages = [
@@ -163,11 +153,10 @@ def get_attention_qwen2_5(
             ],
         }
     ]
-    pdb.set_trace()
     # 输入预处理
-    inputs = prepare_qwen2_5_input(messages, processor).to(model.device, torch.bfloat16)
+    inputs = prepare_qwen2_5_input(messages, processor).to(DEVICE, torch.bfloat16)
     general_inputs = prepare_qwen2_5_input(general_messages, processor).to(
-        model.device, torch.bfloat16
+        DEVICE, torch.bfloat16
     )
 
     # inputs["image_grid_thw"]: tensor([[ 1, 24, 38]], device='cuda:0')
@@ -187,9 +176,13 @@ def get_attention_qwen2_5(
     pos_end = input_ids.index(vision_end_token_id)  # 图像结束
 
     # 计算注意力
-    outputs = model(**inputs, output_attentions=True)
-    general_outputs = model(**general_inputs, output_attentions=True)
-
+    ATT_LAYER = 22
+    outputs = model(
+        **inputs,
+        output_attentions=True,  # 这里会输出所有层的attention，导致爆显存，看了Qwen的源码，没有找到支持输出指定层attention的方法，只能暂时在下面手动清空缓存并提取指定层
+        output_hidden_states=False,
+        use_cache=False,
+    )
     att = (
         outputs["attentions"][ATT_LAYER][
             0, :, -1, pos:pos_end
@@ -199,6 +192,14 @@ def get_attention_qwen2_5(
         .detach()
         .cpu()
         .numpy()
+    )
+    del outputs
+    torch.cuda.empty_cache()
+    general_outputs = model(
+        **general_inputs,
+        output_attentions=True,
+        output_hidden_states=False,
+        use_cache=False,
     )
     general_att = (
         general_outputs["attentions"][ATT_LAYER][
@@ -210,6 +211,8 @@ def get_attention_qwen2_5(
         .cpu()
         .numpy()
     )
+    del general_outputs
+    torch.cuda.empty_cache()
     att_map = att / general_att
     att_map = att_map.reshape(att_shape)
     return att_map

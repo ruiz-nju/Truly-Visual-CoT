@@ -1,5 +1,4 @@
 data/
 __pycache__/
-VPT_Datasets/
 logs/
 temp.py

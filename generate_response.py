@@ -53,8 +53,10 @@ def get_model(model_name):
 def generation_mathvista_origin(model_name, data_dir, output_file_path):
     print(f"Saved results to {output_file_path}")
     model, processor = get_model(model_name)
-    data_list = load_dataset("AI4Math/MathVista", split="testmini")
-    data = {item["pid"]: item for item in data_list}
+    data_file = os.path.join(data_dir, "testmini.json")
+    if not os.path.exists(data_file):
+        raise ValueError(f"Data file {data_file} not found")
+    data = read_json(data_file)
     query_file = os.path.join(data_dir, "query.json")
     if os.path.exists(query_file):
         print(f"Loading existing {query_file}...")
@@ -83,10 +85,7 @@ def generation_mathvista_origin(model_name, data_dir, output_file_path):
     test_pids = [pid for pid in full_pids if pid not in skip_pids]
 
     for i, problem_id in enumerate(tqdm(test_pids, desc="Generating origin response")):
-        problem: dict = data[problem_id].copy()
-        # 加载的数据集中包含 decoded_image
-        # 这里为了使用统一的函数，删除该键值对，直接根据路径加载本地图片
-        problem.pop("decoded_image")
+        problem = data[problem_id]
         image_path = os.path.join(data_dir, problem["image"])
         query = query_data[problem_id]
         try:
