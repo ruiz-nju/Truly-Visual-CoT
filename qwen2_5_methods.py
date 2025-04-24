@@ -8,7 +8,7 @@ from PIL import Image
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-REFOCUS = "I should refocus the image and confirm some necessary details before proceeding with my reasoning."
+REFOCUS = "Wait, I should refocus on the image to double-check some necessary details and continue my reasoning."
 
 
 def prepare_qwen2_5_input(user_prompt, image_path, processor, cur_generation=None):

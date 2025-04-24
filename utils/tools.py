@@ -37,8 +37,7 @@ def encode_base64(image):
 
 
 def split_sentence(response):
-    # Split only on \n\n sequences
-    sentences = re.split(r"\n\n+", response)
+    sentences = re.split(r"\n+", response)
     splited_response = [s.strip() for s in sentences if s.strip()]
     return splited_response
 
