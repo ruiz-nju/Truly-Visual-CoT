@@ -72,6 +72,7 @@ def get_acc_with_contion(res_pd, key, value):
 def calculation_mathvista(
     input_file_path,
     output_file_path,
+    period,
 ):
     if not os.path.exists(input_file_path):
         raise FileNotFoundError(f"File {input_file_path} not found")
@@ -83,7 +84,10 @@ def calculation_mathvista(
     total = len(test_pids)
     correct = 0
     for pid in tqdm(test_pids, desc="Reading results"):
-        true_false = results[pid]["true_false"]
+        if period == "origin":
+            true_false = results[pid]["true_false"]
+        elif period == "refocus":
+            true_false = results[pid]["refocus_true_false"]
         if true_false:
             correct += 1
 
@@ -174,6 +178,7 @@ def main(args):
         calculation_mathvista(
             input_file_path=input_file_path,
             output_file_path=output_file_path,
+            period=period,
         )
     else:
         raise ValueError(f"Dataset {dataset} not supported")

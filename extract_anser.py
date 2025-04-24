@@ -296,12 +296,14 @@ def normalize_extracted_answer(
     return normalized_extraction
 
 
-def extraction_mathvista(
+def extraction_mathvista_origin(
     input_file_path, output_file_path, extractor_name="ep-20250422234405-ddr6w"
 ):
+    target = "response"
+
     if not os.path.exists(input_file_path):
         raise FileNotFoundError(f"File {input_file_path} not found")
-    print(f"Saved results to {output_file_path}")
+    print(f"Saving results to {output_file_path}")
     client = OpenAI(
         base_url="https://ark.cn-beijing.volces.com/api/v3",  # 这里使用的是 DeepSeek V3 的api
         api_key=os.environ.get("ARK_API_KEY"),
@@ -309,7 +311,6 @@ def extraction_mathvista(
 
     extractor = GPT_Model(client=client, model=extractor_name)
     print(f"Extracting answers from {input_file_path}")
-    label = "response"
 
     if os.path.exists(output_file_path):
         print(f"Loading existing {output_file_path}...")
@@ -341,10 +342,8 @@ def extraction_mathvista(
     save_every = 5
     for i, pid in enumerate(tqdm(test_pids, desc="Extracting answers")):
         problem = results[pid]
-
-        assert label in problem
-
-        response = problem[label]
+        assert target in problem, f"Label '{target}' not found in problem"
+        response = problem[target]
         extraction = extract_answer(extractor, response, problem)
         # 将提取的答案保存到results中
         results[pid]["extraction"] = extraction
@@ -362,8 +361,82 @@ def extraction_mathvista(
         )
         answer = problem["answer"]
         true_false = safe_equal(prediction, answer)
-        problem["prediction"] = prediction
-        problem["true_false"] = true_false
+        results[pid]["prediction"] = prediction
+        results[pid]["true_false"] = true_false
+
+        if (i % save_every == 0 and i > 0) or i == len(test_pids) - 1:
+            save_json(results, output_file_path)
+
+    print("MathVista: Extract Answers - Finish")
+
+
+def extraction_mathvista_refocus(
+    input_file_path, output_file_path, extractor_name="ep-20250422234405-ddr6w"
+):
+    target = "refocus_response"
+
+    if not os.path.exists(input_file_path):
+        raise FileNotFoundError(f"File {input_file_path} not found")
+    print(f"Saving results to {output_file_path}")
+    client = OpenAI(
+        base_url="https://ark.cn-beijing.volces.com/api/v3",  # 这里使用的是 DeepSeek V3 的api
+        api_key=os.environ.get("ARK_API_KEY"),
+    )
+
+    extractor = GPT_Model(client=client, model=extractor_name)
+    print(f"Extracting answers from {input_file_path}")
+
+    if os.path.exists(output_file_path):
+        print(f"Loading existing {output_file_path}...")
+        existing_results = read_json(output_file_path)
+    else:
+        existing_results = {}
+
+    print(f"Loading {input_file_path}...")
+    results = read_json(input_file_path)
+    full_pids = list(results.keys())
+
+    skip_pids = []
+    for pid, problem in existing_results.items():
+        refocus_prediction = problem.get("refocus_prediction")
+        refocus_true_false = problem.get("refocus_true_false")
+        if refocus_prediction is not None and refocus_true_false is not None:
+            results[pid]["refocus_prediction"] = refocus_prediction
+            results[pid]["refocus_true_false"] = refocus_true_false
+            skip_pids.append(problem["pid"])
+
+    if len(skip_pids) > 0:
+        print(
+            f"Found existing results file with {len(skip_pids)} problems with valid refocus_prediction and refocus_true_false. Skipping these problems..."
+        )
+    test_pids = [pid for pid in full_pids if pid not in skip_pids]
+
+    print(f"Number of test problems to run: {len(test_pids)}")
+
+    save_every = 5
+    for i, pid in enumerate(tqdm(test_pids, desc="Extracting answers")):
+        problem = results[pid]
+        assert target in problem, f"Label '{target}' not found in problem"
+        refocus_response = problem[target]
+        refocus_extraction = extract_answer(extractor, refocus_response, problem)
+        # 将提取的答案保存到results中
+        results[pid]["refocus_extraction"] = refocus_extraction
+        # 将提取的答案标准化
+        choices = problem["choices"]
+        question_type = problem["question_type"]
+        answer_type = problem["answer_type"]
+        precision = problem["precision"]
+        refocus_prediction = normalize_extracted_answer(
+            choices=choices,
+            question_type=question_type,
+            answer_type=answer_type,
+            precision=precision,
+            extraction=refocus_extraction,
+        )
+        answer = problem["answer"]
+        refocus_true_false = safe_equal(prediction=refocus_prediction, answer=answer)
+        results[pid]["refocus_prediction"] = refocus_prediction
+        results[pid]["refocus_true_false"] = refocus_true_false
 
         if (i % save_every == 0 and i > 0) or i == len(test_pids) - 1:
             save_json(results, output_file_path)
@@ -393,9 +466,16 @@ def main(args):
     if dataset == "mathvista":
         output_file_path = os.path.join(output_dir, "extracted_answer.json")
         input_file_path = os.path.join(output_dir, "generated_response.json")
-        extraction_mathvista(
-            input_file_path=input_file_path, output_file_path=output_file_path
-        )
+        if period == "origin":
+            extraction_mathvista_origin(
+                input_file_path=input_file_path,
+                output_file_path=output_file_path,
+            )
+        elif period == "refocus":
+            extraction_mathvista_refocus(
+                input_file_path=input_file_path,
+                output_file_path=output_file_path,
+            )
     else:
         raise ValueError(f"Dataset {dataset} not supported")
 

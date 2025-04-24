@@ -51,7 +51,7 @@ def get_model(model_name):
 
 
 def generation_mathvista_origin(model_name, data_dir, output_file_path):
-    print(f"Saved results to {output_file_path}")
+    print(f"Saving results to {output_file_path}")
     model, processor = get_model(model_name)
     data_file = os.path.join(data_dir, "testmini.json")
     if not os.path.exists(data_file):
@@ -122,16 +122,36 @@ def generation_mathvista_refocus(
     output_file_path,
     input_file,
 ):
+    print(f"Saving results to {output_file_path}")
     model, processor = get_model(model_name)
     if not os.path.exists(input_file):
         raise FileNotFoundError(f"File {input_file} not found")
     print(f"Loading {input_file}...")
-    inputs = read_json(input_file)
-    full_pids = list(inputs.keys())
+    results = read_json(input_file)
+    full_pids = list(results.keys())
+    if os.path.exists(output_file_path):
+        print(f"Loading existing {output_file_path}...")
+        existing_results = read_json(output_file_path)
+    else:
+        existing_results = {}
 
-    for i, pid in enumerate(tqdm(full_pids, desc="Generating refocus response")):
+    skip_pids = []
+    for pid, problem in existing_results.items():
+        refocus_position = problem.get("refocus_position")
+        refocus_response = problem.get("refocus_response")
+        if refocus_position is not None and refocus_response is not None:
+            results[pid]["refocus_position"] = refocus_position
+            results[pid]["refocus_response"] = refocus_response
+            skip_pids.append(problem["pid"])
+    if len(skip_pids) > 0:
+        print(
+            f"Found existing results file with {len(skip_pids)} problems with valid refocus_response. Skipping these problems..."
+        )
+    test_pids = [pid for pid in full_pids if pid not in skip_pids]
+    print(f"Number of test problems to run: {len(test_pids)}")
 
-        problem = inputs[pid]
+    for i, pid in enumerate(tqdm(test_pids, desc="Generating refocus response")):
+        problem = results[pid]
         query = problem["query"]
         image_path = os.path.join("data/mathvista", problem["image"])
         ori_response = problem["response"]
@@ -144,13 +164,12 @@ def generation_mathvista_refocus(
                 image_path=image_path,
                 ori_response=ori_response,
             )
-            # 此处将原来的 response 替换为 refocus_response
-            inputs[pid]["response"] = refocus_response
-            inputs[pid]["refocus_position"] = refocus_position
+            results[pid]["refocus_position"] = refocus_position
+            results[pid]["refocus_response"] = refocus_response
             save_every = 5
             if (i % save_every == 0 and i > 0) or i == len(full_pids) - 1:
                 try:
-                    save_json(inputs, output_file_path)
+                    save_json(results, output_file_path)
                 except Exception as e:
                     print(f"Error in saving {output_file_path}")
                     print(e)
@@ -188,7 +207,7 @@ def main(args):
             )
         elif period == "refocus":
             input_file = os.path.join(
-                "outputs_origin", dataset, model_name, "generated_response.json"
+                "outputs_origin", dataset, model_name, "extracted_answer.json"
             )
             generation_mathvista_refocus(
                 model_name=model_name,

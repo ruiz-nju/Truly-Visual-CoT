@@ -8,18 +8,30 @@ from PIL import Image
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-REFOCUS = "I should refocus on the image."
+REFOCUS = "I should refocus the image and confirm some necessary details before proceeding with my reasoning."
 
 
-def prepare_qwen2_5_input(messages, processor):
+def prepare_qwen2_5_input(user_prompt, image_path, processor, cur_generation=None):
     """
     Prepare the input for Qwen2.5VL.
     """
-
+    image = Image.open(image_path)
+    image_str = encode_base64(image=image)
+    user_message = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "image", "image": f"data:image;base64,{image_str}"},
+                {"type": "text", "text": user_prompt},
+            ],
+        },
+    ]
+    image_inputs, video_inputs = process_vision_info(user_message)
     text = processor.apply_chat_template(
-        messages, tokenize=False, add_generation_prompt=True
+        user_message, tokenize=False, add_generation_prompt=True
     )
-    image_inputs, video_inputs = process_vision_info(messages)
+    if cur_generation:
+        text = text + cur_generation
     inputs = processor(
         text=[text],
         images=image_inputs,
@@ -32,30 +44,15 @@ def prepare_qwen2_5_input(messages, processor):
 
 
 def get_response_qwen2_5(
-    user_prompt, image_path, model, processor, existing_generation=None
+    user_prompt, image_path, model, processor, cur_generation=None
 ):
-    image = Image.open(image_path)
-    image_str = encode_base64(image)
-    messages = [
-        {
-            "role": "user",
-            "content": [
-                {"type": "image", "image": f"data:image/jpeg;base64,{image_str}"},
-                {"type": "text", "text": user_prompt},
-            ],
-        }
-    ]
-    if existing_generation:
-        messages.append(
-            {
-                "role": "assistant",
-                "content": [{"type": "text", "text": existing_generation}],
-            }
-        )
-    inputs = prepare_qwen2_5_input(messages=messages, processor=processor).to(
-        DEVICE, torch.bfloat16
-    )
-    generate_ids = model.generate(**inputs, max_new_tokens=2048, do_sample=False)
+    inputs = prepare_qwen2_5_input(
+        user_prompt=user_prompt,
+        image_path=image_path,
+        processor=processor,
+        cur_generation=cur_generation,
+    ).to(DEVICE, torch.bfloat16)
+    generate_ids = model.generate(**inputs, max_new_tokens=5096, do_sample=False)
     generation = processor.batch_decode(
         generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False
     )[0]
@@ -63,8 +60,6 @@ def get_response_qwen2_5(
 
 
 def refocus_qwen2_5(model, processor, user_prompt, image_path, ori_response):
-    image = Image.open(image_path)
-    image_str = encode_base64(image)
     model.eval()
     general_prompt = "Write a general description of the image."
     splited_response = split_sentence(ori_response)
@@ -73,8 +68,8 @@ def refocus_qwen2_5(model, processor, user_prompt, image_path, ori_response):
     for sentence_idx in range(len(splited_response)):
         cur_generation = " ".join(splited_response[: sentence_idx + 1])
         att_map = get_attention_qwen2_5(
-            image_str=image_str,
-            prompt=user_prompt,
+            image_path=image_path,
+            user_prompt=user_prompt,
             cur_generation=cur_generation,
             general_prompt=general_prompt,
             model=model,
@@ -94,13 +89,16 @@ def refocus_qwen2_5(model, processor, user_prompt, image_path, ori_response):
             continue
         if (
             att_map_mean < att_map_mean_former
-            and att_map_entropy < att_map_entropy_former
+            and att_map_entropy > att_map_entropy_former
         ):
             refocus_positions.append(refocus_position)
         att_map_mean_former, att_map_entropy_former = att_map_mean, att_map_entropy
-
     # 选取中间一个 refocus_position 重新生成 response
-    refocus_position = refocus_positions[len(refocus_positions) // 2]
+    if len(refocus_positions) == 0:
+        # 如果没有合适的refocus_position，则直接将att_map_mean最低的地方设置为refocus_position
+        refocus_position = atts[np.argmin([x[2] for x in atts])][0]
+    else:
+        refocus_position = refocus_positions[len(refocus_positions) // 2]
     refocus_response = splited_response[:refocus_position] + [REFOCUS]
     refocus_response = " ".join(refocus_response)
     refocus_response = get_response_qwen2_5(
@@ -108,7 +106,7 @@ def refocus_qwen2_5(model, processor, user_prompt, image_path, ori_response):
         image_path=image_path,
         model=model,
         processor=processor,
-        existing_generation=refocus_response,
+        cur_generation=refocus_response,
     )
     return refocus_position, refocus_response
 
@@ -125,39 +123,20 @@ def calculate_entropy(att_map):
 
 
 def get_attention_qwen2_5(
-    image_str, prompt, cur_generation, general_prompt, model, processor
+    user_prompt, image_path, cur_generation, general_prompt, model, processor
 ):
-
-    # 计算cur_sentence attention
-    messages = [
-        {
-            "role": "user",
-            "content": [
-                {"type": "image", "image": f"data:image;base64,{image_str}"},
-                {"type": "text", "text": prompt},
-            ],
-        },
-        {
-            "role": "assistant",
-            "content": [
-                {"type": "text", "text": cur_generation},
-            ],
-        },
-    ]
-    general_messages = [
-        {
-            "role": "user",
-            "content": [
-                {"type": "image", "image": f"data:image;base64,{image_str}"},
-                {"type": "text", "text": general_prompt},
-            ],
-        }
-    ]
     # 输入预处理
-    inputs = prepare_qwen2_5_input(messages, processor).to(DEVICE, torch.bfloat16)
-    general_inputs = prepare_qwen2_5_input(general_messages, processor).to(
-        DEVICE, torch.bfloat16
-    )
+    inputs = prepare_qwen2_5_input(
+        user_prompt=user_prompt,
+        image_path=image_path,
+        processor=processor,
+        cur_generation=cur_generation,
+    ).to(DEVICE, torch.bfloat16)
+    general_inputs = prepare_qwen2_5_input(
+        user_prompt=general_prompt,
+        image_path=image_path,
+        processor=processor,
+    ).to(DEVICE, torch.bfloat16)
 
     # inputs["image_grid_thw"]: tensor([[ 1, 24, 38]], device='cuda:0')
     # 记录了每个图片的 patch 信息，包括 T, H, W，这里取 H, W
@@ -177,16 +156,16 @@ def get_attention_qwen2_5(
 
     # 计算注意力
     ATT_LAYER = 22
-    outputs = model(
-        **inputs,
-        output_attentions=True,  # 这里会输出所有层的attention，导致爆显存，看了Qwen的源码，没有找到支持输出指定层attention的方法，只能暂时在下面手动清空缓存并提取指定层
-        output_hidden_states=False,
-        use_cache=False,
-    )
+    with torch.no_grad():
+        outputs = model(
+            **inputs,
+            output_attentions=True,
+            only_output_attention_one_layer=ATT_LAYER,  # 使用了这个参数的话，outputs输出的只有指定层的attention
+            output_hidden_states=False,
+            use_cache=False,
+        )  # outputs.shape: torch.Size([1, 28, 1714, 1714])
     att = (
-        outputs["attentions"][ATT_LAYER][
-            0, :, -1, pos:pos_end
-        ]  # [heads, num_image_tokens]
+        outputs[0, :, -1, pos:pos_end]  # [heads, num_image_tokens]
         .mean(dim=(0))  # 平均多头
         .to(torch.float32)
         .detach()
@@ -198,13 +177,12 @@ def get_attention_qwen2_5(
     general_outputs = model(
         **general_inputs,
         output_attentions=True,
+        only_output_attention_one_layer=ATT_LAYER,
         output_hidden_states=False,
         use_cache=False,
     )
     general_att = (
-        general_outputs["attentions"][ATT_LAYER][
-            0, :, -1, pos:pos_end
-        ]  # [heads, num_image_tokens]
+        general_outputs[0, :, -1, pos:pos_end]  # [heads, num_image_tokens]
         .mean(dim=(0))  # 平均多头
         .to(torch.float32)
         .detach()
