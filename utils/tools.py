@@ -37,9 +37,44 @@ def encode_base64(image):
 
 
 def split_sentence(response):
-    sentences = re.split(r"\n+", response)
-    splited_response = [s.strip() for s in sentences if s.strip()]
-    return splited_response
+    # 匹配行内公式（$...$）和显示公式（$$...$$）
+    formula_pattern = r"(\\$.*?\\$|\\$$.*?\\$$)"
+    formulas = []
+
+    def replace_formula(match):
+        formulas.append(match.group(0))
+        return f"__FORMULA_{len(formulas)-1}__"
+
+    # 用占位符替换所有公式，避免干扰分句
+    text_with_placeholders = re.sub(
+        formula_pattern, replace_formula, response, flags=re.DOTALL
+    )
+
+    # 分割处理：先按换行符分块，再按句子结束符分句
+    sentences = []
+    blocks = [b.strip() for b in text_with_placeholders.split("\n") if b.strip()]
+
+    for block in blocks:
+        # 在每块中按句子结束符（.!?）分割，同时保留结尾符号
+        split_points = re.finditer(r"([.!?])\s+", block)
+        last_idx = 0
+        for match in split_points:
+            end = match.end()
+            sentences.append(
+                block[last_idx : end - 1].strip()
+            )  # -1保留标点，去除末尾空格
+            last_idx = end
+        # 添加剩余部分
+        if last_idx < len(block):
+            sentences.append(block[last_idx:].strip())
+
+    # 恢复公式内容
+    for i in range(len(formulas)):
+        placeholder = f"__FORMULA_{i}__"
+        for j in range(len(sentences)):
+            sentences[j] = sentences[j].replace(placeholder, formulas[i])
+
+    return sentences
 
 
 def print_info(module_name, model_name, dataset_name, period):

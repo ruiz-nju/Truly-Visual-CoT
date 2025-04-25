@@ -8,7 +8,7 @@ from PIL import Image
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-REFOCUS = "Wait, I should refocus on the image to double-check some necessary details and continue my reasoning."
+REFOCUS = "Before I move on, let's revisit the picture and check some key conditions that are relevant to the reasoning at hand."
 
 
 def prepare_qwen2_5_input(user_prompt, image_path, processor, cur_generation=None):
@@ -94,6 +94,7 @@ def refocus_qwen2_5(model, processor, user_prompt, image_path, ori_response):
             refocus_positions.append(refocus_position)
         att_map_mean_former, att_map_entropy_former = att_map_mean, att_map_entropy
     # 选取中间一个 refocus_position 重新生成 response
+    print(f"Current available refocus positions: {refocus_positions}")
     if len(refocus_positions) == 0:
         # 如果没有合适的refocus_position，则直接将att_map_mean最低的地方设置为refocus_position
         refocus_position = atts[np.argmin([x[2] for x in atts])][0]
