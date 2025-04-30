@@ -161,7 +161,7 @@ def get_attention_qwen2_5(
         outputs = model(
             **inputs,
             output_attentions=True,
-            only_output_attention_one_layer=ATT_LAYER,  # 使用了这个参数的话，outputs输出的只有指定层的attention
+            only_output_attention_one_layer=ATT_LAYER,
             output_hidden_states=False,
             use_cache=False,
         )  # outputs.shape: torch.Size([1, 28, 1714, 1714])
@@ -175,13 +175,14 @@ def get_attention_qwen2_5(
     )
     del outputs
     torch.cuda.empty_cache()
-    general_outputs = model(
-        **general_inputs,
-        output_attentions=True,
-        only_output_attention_one_layer=ATT_LAYER,
-        output_hidden_states=False,
-        use_cache=False,
-    )
+    with torch.no_grad():
+        general_outputs = model(
+            **general_inputs,
+            output_attentions=True,
+            only_output_attention_one_layer=ATT_LAYER,
+            output_hidden_states=False,
+            use_cache=False,
+        )
     general_att = (
         general_outputs[0, :, -1, pos:pos_end]  # [heads, num_image_tokens]
         .mean(dim=(0))  # 平均多头

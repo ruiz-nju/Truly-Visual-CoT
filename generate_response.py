@@ -166,7 +166,7 @@ def generation_mathvista_refocus(
             )
             results[pid]["refocus_position"] = refocus_position
             results[pid]["refocus_response"] = refocus_response
-            save_every = 5
+            save_every = 1
             if (i % save_every == 0 and i > 0) or i == len(full_pids) - 1:
                 try:
                     save_json(results, output_file_path)
@@ -207,7 +207,7 @@ def main(args):
             )
         elif period == "refocus":
             input_file = os.path.join(
-                "outputs_origin", dataset, model_name, "extracted_answer.json"
+                "outputs_origin_old", dataset, model_name, "extracted_answer.json"
             )
             generation_mathvista_refocus(
                 model_name=model_name,

@@ -413,7 +413,7 @@ def extraction_mathvista_refocus(
 
     print(f"Number of test problems to run: {len(test_pids)}")
 
-    save_every = 5
+    save_every = 1
     for i, pid in enumerate(tqdm(test_pids, desc="Extracting answers")):
         problem = results[pid]
         assert target in problem, f"Label '{target}' not found in problem"

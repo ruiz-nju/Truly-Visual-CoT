@@ -1,0 +1,665 @@
+{
+    "id": "physical-commonsense-1398",
+    "category": "Usage Purpose",
+    "image_id": "commonsense-physical-commonsense-1498",
+    "question": "What is the likely purpose of the troll statue under the bridge?",
+    "choices": [
+        "To scare away trespassers",
+        "To bring attention to the city's tourist attractions",
+        "To honor a local legend",
+        "To discourage people from walking across the bridge"
+    ],
+    "context": "",
+    "answer": "B",
+    "rationale": "The words \"Troll Ave N\" on a sign suggest that the street was named for the rock formation nearby that resembles a troll.\nThe statue of a troll under the bridge and the rock formation resembling a troll indicate that the city devised tourist attractions to bring attention to the area.\nThe well worn ground around the troll statue suggests that many people have come by this spot to take in the troll statue, further supporting the idea that it is a tourist attraction.\nTherefore, (B) \"To bring attention to the city's tourist attractions\" is the right answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1398.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The image shows what appears to be the \"Troll Statue\" in Seattle, Washington (often referred to as \"Monumental Troll\"), located under Interstate 5 near Fremont Avenue and Eastlake Way NE. This iconic sculpture was designed by Swedish sculptor Carl August Nielsen.<|vision_start|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|vision_end|> The<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1342",
+    "category": "Usage Purpose",
+    "image_id": "commonsense-physical-commonsense-874",
+    "question": "What is the primary business of the truck?",
+    "choices": [
+        "Transporting clothing",
+        "Selling food",
+        "Selling books",
+        "Transporting cake"
+    ],
+    "context": "",
+    "answer": "B",
+    "rationale": "The writing that says \"Southern Cake Queen\" suggests that the truck is about cakes.\nThe presence of a window on the side of the truck suggests that this truck sells food out of it.\nTherefore, (B) \"Selling food\" is the correct answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1342.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The answer to what the primary business of the truck in this image appears to be selling food, as indicated by its's logo and signage (\"Southern Cake Queen,\" which implies it specializes in serving or selling cakes rather than transporting them're other not directly related to the core function of the vehicle itself (which would typically involve transportation). Therefore:\n\n**Correct Answer:** B. Selling Food\n\nThis assumption can based on visual cues such as branding and context, but're also actual the specific type provided within your options set do does not include \"transporting clothing\" or \"selling books\".<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1423",
+    "category": "Usage Purpose",
+    "image_id": "commonsense-physical-commonsense-1319",
+    "question": "What kind of snowboarders is the mountain in the picture suitable for?",
+    "choices": [
+        "Beginner only",
+        "Not sure",
+        "Advanced only",
+        "All levels"
+    ],
+    "context": "",
+    "answer": "C",
+    "rationale": "The snowboarder in the picture is seen touching the ground with his arm.\nIt indicates that they are struggling to maintain their balance.\nSo it suggests that the moutain is challenging for the man in the image.\nFurther, there is a large slope coming from the mountain.\nCombined with previous inferences, the mountain would be difficult for beginners.\nTherefore, the correct answer is option C) Advanced only.",
+    "split": "test",
+    "image": "images/physical-commonsense-1423.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The image shows an open, wide slope with visible tracks from previous riders and relatively gentle terrain that could be considered beginner-friendly or intermediate. However, without more detailed information on height differences between sections (e.g., moguls) ) , it's difficult to give precise level suitability.\n\nGiven\n addCriterion\n \u81ea\u52a8\u751f\u6210\u7684\u9009\u9879\uff1a\nA.<|vision_start|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|vision_end|> Beginner<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1364",
+    "category": "Usage Purpose",
+    "image_id": "commonsense-physical-commonsense-1574",
+    "question": "What is the purpose of the red train cart?",
+    "choices": [
+        "Transporting cargo",
+        "Providing living quarters",
+        "Carrying passengers",
+        "Storing equipment"
+    ],
+    "context": "",
+    "answer": "B",
+    "rationale": "The red train cart shaped like a house suggests that it is providing living quarters.\nThe red door on the train suggests that it is an entrance door, further indicating that it is used for living quarters. \nTherefore, (B) \"Providing living quarters\" is the correct answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1364.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The image shows an old-style railroad car, which typically has multiple purposes depending on its's design and context:\n\nA) **Transporting Cargo**: This type was of railcar cars could be used for transporting goods or materials.\n  \nB & C** Providing Living Quarters /Carrying Passengers:** While it may have had some passenger-c role in its past, this particular car appears to be more designed for storage or transportation othre than people.\n\nD** Storing Equipment**: Many older caboose-like trains like these were often used as maintenance-of waycra cs torage units for tools or otherther railway infrastructure needs.\n\nTherefore:\n- The most likely purpose (based\n addCriterion(\"E\")<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1350",
+    "category": "Usage Purpose",
+    "image_id": "commonsense-physical-commonsense-857",
+    "question": "What is the possible purpose of the building in the background?",
+    "choices": [
+        "A shopping mall",
+        "A bird museum",
+        "An office building",
+        "A historical landmark"
+    ],
+    "context": "",
+    "answer": "C",
+    "rationale": "There are many large windows in the building, and the lack of strict protective measures means that it cannot be a museum.\nThere is no billboard outside it, and there is no big entrance, indicating that it should not be a shopping mall.\nMany lights are turned on at night, indicating that it is also used at night, and it should not be a landmark building.\nTherefore, (C) \"An office building\" is the most likely purpose of the building in the background.",
+    "split": "test",
+    "image": "images/physical-commonsense-1350.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The image shows an older-style, ornate brick building with visible signage that reads \" \"Glasgow Telegraph.\" This suggests it may have housed or been associated with media operations historically (e.e., newspaper offices). Given its architecture and location sign, here's my assessment:\n\n- **Option C**: It looks like part of an office building.\n  \nIt\u2019s less likely to be serve as:\n  - **A shopping mall** due to architectural style not being typical for retail spaces,\n   - **a Bird Museum**, which would generally feature more naturalistic exhibits rather than urban structures such as this one.\n\nTherefore,\n\n*Final Answer:* The most probable answer seems to be Option *c.* Office Building.<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1383",
+    "category": "Usage Purpose",
+    "image_id": "commonsense-physical-commonsense-1257",
+    "question": "What can be inferred from the image?",
+    "choices": [
+        "The cake is not yet ready to be served",
+        "The cake will be thrown away",
+        "The cake is being served at a party",
+        "The cake is not meant to be eaten"
+    ],
+    "context": "",
+    "answer": "C",
+    "rationale": "We can infer from the imageof a cake on a disposable plate that it is meant to be served to a group of people.\nAdditionally, a fork on the plate next to the cake implies that it is meant to be eaten.\nLastly, a cake topping on the plate infers that the topping was added after the cake was put on the plate, indicating that it is a freshly prepared cake and not something that was bought from a store. \nTherefore, option C is the correct answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1383.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The correct inference based on the provided options and visual clues in the image would likely point towards:\n\n**A. The cake is not yet ready to be serve**\n\nThis conclusion stems because:\n- There appears to be only one slice of chocolate cake.\n- The presence of red sauce (possibly strawberry or raspberry) that has been drizzled over it suggests decoration but for serving purposes, which typically happens before distribution.\n\nHowever note this may depend more specifically upon context or further details unseen in such an image! <|im_end|>"
+}
+{
+    "id": "physical-commonsense-1369",
+    "category": "Usage Purpose",
+    "image_id": "commonsense-physical-commonsense-1404",
+    "question": "What is the most likely reason for the presence of the street warning sign?",
+    "choices": [
+        "Construction work ahead",
+        "Hazardous road conditions",
+        "One-way street",
+        "No entry for vehicles"
+    ],
+    "context": "",
+    "answer": "C",
+    "rationale": "The red and white sign that reads \"do not enter\" suggests that the street behind the sign is one way only.\nThe street warning sign indicates that cars are not allowed in but only exiting. Therefore, the most likely reason for the presence of the warning sign is that it is a one-way street.\nTherefore, (C) \"One-way street\" is the correct answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1369.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The most likely reason for the presence of the \"Do Not Enter\" street warning sign in this image would be:\n\n**D. No entry for vehicles**\n\nThis type indicates that vehicles should not proceed into or enter from certain directions, which aligns with what's shown on the red and white circular sign.<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1361",
+    "category": "Usage Purpose",
+    "image_id": "commonsense-physical-commonsense-479",
+    "question": "What can you infer from the image?",
+    "choices": [
+        "The person is making coffee.",
+        "The person is cooking dinner.",
+        "The person is making a smoothie.",
+        "The person is baking a cake."
+    ],
+    "context": "",
+    "answer": "C",
+    "rationale": "The presence of a blender on the countertop suggests that the person is preparing some kind of blended drink or dish.\nThe yellow mixture in the blender is likely a smoothie, indicating that the person is making a smoothie.\nTherefore, (C) \"The person is making a smoothie\" is the correct answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1361.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The correct inference based on the image provided would be:\n\nC. The person is making a smoothie.\n\nThis conclusion comes from observing that there the blender contains what appears to be green liquid, which could likely represent ingredients for a smoothie such as fruits and vegetables or leafyy\n addCriterion<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1380",
+    "category": "Usage Purpose",
+    "image_id": "commonsense-physical-commonsense-1138",
+    "question": "What can be inferred about the train cars in the picture?",
+    "choices": [
+        "They are in use for transporting goods",
+        "They have been diverted and are no longer able to move along the tracks",
+        "They have been cleaned and prepared for future use",
+        "They are still on the train tracks"
+    ],
+    "context": "",
+    "answer": "B",
+    "rationale": "First, we see the train tracks in the picture that lead to nowhere, implying that there is an obstruction or a diversion in the tracks. \nSecondly, we see the train cars diverted off of the tracks, which suggests that they are no longer able to continue along their usual track route. \nTherefore, the correct answer is option B, they have been diverted and are no longer able to move along the tracks. \nYellow rust on the train suggests it hasn't been cleaned.\nOption A is incorrect because there is no indication that the train cars are currently being used to transport goods. \nOption C is incorrect because there is no indication that the train cars have been cleaned or prepared for future use. \nOption D is incorrect because the train cars are visibly off the train tracks. \nTherefore, option B is the correct answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1380.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The image shows two sets of train cars that appear to be stationary, with their barriers placed between them indicating they could not move freely anymore on the track. because it seems like there these trains are are being out removed from service or due to some maintenance needs. A B is correct.\n\nTherefore:\n\n**Answer:** B. They have been diverted and are no longer able to move along the tracks<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1363",
+    "category": "Usage Purpose",
+    "image_id": "commonsense-physical-commonsense-797",
+    "question": "What is the purpose of the mannequin sitting in front of the table?",
+    "choices": [
+        "To serve as a decoration",
+        "To advertise a store",
+        "To hold clothing items",
+        "To attract customers"
+    ],
+    "context": "",
+    "answer": "B",
+    "rationale": "The mannequin sitting in front of the table suggests that it is placed there as an advertisement.\nThis decoration looks quite peculiar and can attract people's attention.\nFurthermore, the label on the model's tie further suggests that its purpose might be for advertising or promotion.\nThe plant attached to a pole being fake and not requiring watering indicates that the area is not maintained as a living environment, reinforcing the conclusion that the mannequin is not simply a decoration.\nTherefore, (B) \"To advertise a store\" is the correct answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1363.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The image shows a mannequin dressed formally, seated at an empty caf\u00e9-style setting with no food or drink on it except for one cup and saucer placed deliberately to resemble a customer's seat.\n\nGiven\n addCriterion\n<tool_call>\n !*** The provided options \"<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1404",
+    "category": "Status",
+    "image_id": "commonsense-physical-commonsense-1477",
+    "question": "What can you infer about the airplane?",
+    "choices": [
+        "It is a commercial plane",
+        "It is a military plane",
+        "It is a stunt plane",
+        "It is a cargo plane"
+    ],
+    "context": "",
+    "answer": "C",
+    "rationale": "The airplane upside down in the air suggests that it is performing a stunt.\nThe propeller on the nose of the airplane suggests that it is an older model of plane.\nThe presence of two people in the airplane cockpit suggests that it is a training flight. Therefore, (C) \"It is a stunt plane\" is the correct answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1404.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The image shows an aircraft with markings that resemble those of historical or commemorative planes, often used for airshows and displays to honor past aviation history. The design appears vintage-like rather than modern; it also has no visible branding typical on commercial airplanes (e like logos indicating 'United', 'Delta' etc.), nor does its have features resembling cargo planes such as large capacity fuselage.\n\nBased upon these observations:\n\n**Option C:** \"It could be inferred from this marking style, potentially representing either B-25 Mitchell bomber or other similar types historically associated with British Royal Air Force operations during World War II era. However, without more detailed information, we cannot make definitive identification. **\n\nIn general sense though, if it's likely not a current commercial or cargo plane due to markings and possibly some specific use purpose - in might appear more likely being a display or historic warplane representation. \n\nFinal Answer: \n<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1392",
+    "category": "Status",
+    "image_id": "commonsense-physical-commonsense-1171",
+    "question": "What can we infer from the image?",
+    "choices": [
+        "The plane is American made",
+        "The fence hides the plane from the public",
+        "The plane is preparing to take off",
+        "The plane is being repaired"
+    ],
+    "context": "",
+    "answer": "C",
+    "rationale": "By looking at the image, we can see a commercial airline sitting on a runway with the American flag on its side.\nThis indicates that the airline is American based.\nAdditionally, we can see a fence in the background running across a field, which indicates the property line for the airfield.\nBy combining the image, we can infer that the plane is taking off from an American airfield.\nTherefore, option A and B are incorrect.\nFinally, because the plane is sitting on the runway and not being repaired, option D is also incorrect.\nTherefore, the correct answer is C) The plane is preparing to take off.",
+    "split": "test",
+    "image": "images/physical-commonsense-1392.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "Let \"A.\nThe plane is American-made\n\nExplanation:\n- Option A states that it's an American-built aircraft, which could be inferred because of logos and markings on the tail fin resembling those used by American-based airlines or companies (eABX Air, Inc., as indicated in text below). However,\n- B doesn't align with common facts. It seems more likely the presence airplane is parked at than actively hiding the fenc\n- C indicates tthat ththe pplane appears to bbe prepared for departure, based oon itshe lack oof visible ground service personnel or equipment suggesting that iit is activey lywaiting for passengers or cargo to board before taking off.\n  \n- D suggests a repair scenario; however therehe appearance othe airplane on the runway does not strongly indicate any repairs a rengoing unless specific evidence such as open hatches or maintenance vehicles were present.\n\nTherefore, given typical airport procedures and visual cues provided in this image, option C seems most consistent with what we observe here.<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1394",
+    "category": "Status",
+    "image_id": "commonsense-physical-commonsense-1382",
+    "question": "What can you infer about the bathroom?",
+    "choices": [
+        "It is frequently used and not well-maintained",
+        "It is rarely used and well-maintained",
+        "It is frequently used and well-maintained",
+        "It is rarely used and not well-maintained"
+    ],
+    "context": "",
+    "answer": "A",
+    "rationale": "The writing on the wall suggests that the bathroom tends to run out of toilet paper fast.\nThe almost empty toilet paper roll implies that the bathroom gets a lot of usage.\nThe trash and stains on the floor suggest that the bathroom does not get cleaned much.\nThe trash can with an open lid suggests that someone just took out the trash without closing it, indicating a lack of maintenance. \nAll these clues and inferences indicate that the bathroom is frequently used and not well-maintained, so the correct answer is (A) \"It is frequently used and not well-maintained\".",
+    "split": "test",
+    "image": "images/physical-commonsense-1394.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "To determine what inferences we can make from this image, let's consider several aspects:\n\n1. **Condition of Fixtures**: The toilet appears clean but there some signs might be on it.\n2. **Maintenance**: There doesn't seem to be any much visible clutter or damage that would suggest neglect.\n\nGiven\n addCriterioning:\n- If the bathroom were is infrequently used (option B), then one wouldn expect less wear-and tear.\n  \nFinal answer: D - It is rarely used and not maintained\n\nHowever, without further context or evidence such as stains or repairs, this inference could vary based more heavily opinion and personal interpretation rather than fact-based observation alone.<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1360",
+    "category": "Status",
+    "image_id": "commonsense-physical-commonsense-922",
+    "question": "Based on the image, what can we infer about the stove in the picture?",
+    "choices": [
+        "The stove is in a new home",
+        "The stove is not used anymore",
+        "The stove is currently in use",
+        "The stove is broken"
+    ],
+    "context": "",
+    "answer": "B",
+    "rationale": "The very old stove in the picture is accompanied by empty cooking utensils and is not lit, indicating that it is not in use anymore.\nJudging from the cracks on the wall, the aging of the wall is more serious, which shows that this is not a new home.\nAdditionally, the age of the stove suggests that it has been in the home for a long time and may no longer be functional. \nThe clock on the wall reading 8:40 in a bright room indicates that this picture was taken in the morning, but it does not provide any information about the stove being used at that time.\nTherefore, option A and C can be eliminated.\nOption D is unlikely since we have no evidence to support that the stove is broken.\nTherefore, option B is the correct answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1360.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The correct answer appears to be:\n\nA. The stove is located at a home\n\nThis inference comes from observinging that the stove seems like it's placed inside of an indoor setting with kitchenware and personal items around it which suggests its it\u2019s located within a household or living area where cooking activities would take place.<|vision_start|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|vision_end|> However,<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1358",
+    "category": "Status",
+    "image_id": "commonsense-physical-commonsense-1330",
+    "question": "What inference(s) can be drawn from the image in the bathroom?",
+    "choices": [
+        "All options are correct",
+        "The sink is out of order",
+        "The toilet needs cleaning",
+        "No one has used the sink to wash their hands"
+    ],
+    "context": "",
+    "answer": "D",
+    "rationale": "Two unused towels suggest that no one has used the sink to wash their hands.\nAlso, a roll of toilet paper that is folded on top suggests that the bathroom has yet to be used.\nNone of the clues suggest that the sink is out of order or that the toilet needs cleaning, so options B and C can be eliminated.\nTherefore, option D is the correct answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1358.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "Let the image:\n\nThe provided question includes multiple statements about observations made based on this picture, and we need not determine that any the sink is being off or the toilet needs cleaning since these details cannot be observed clearly.\n\nBased purely upon what's visible:\n- There\u2019s no clear evidence showing signs indicating that \"the sink is out out.\n- We can also infer that it is not possible for us that the toilet needs cleaning solely by looking at its this photo; as for instance the seat lid looks closed which may suggest recent use usage.\n- However there, it might be true but that nobody have used the sink recently considering that there could indicate lack hand washing activity.\n\nSo therefore correctly option would be D. No one has used the sink to wash\n\nHence,\n\nFinal answer: D<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1436",
+    "category": "Status",
+    "image_id": "commonsense-physical-commonsense-1346",
+    "question": "Why does the front of the train appear dirty?",
+    "choices": [
+        "The train was caught in a rainstorm",
+        "The train has not been washed in some time",
+        "All options are possible",
+        "The train was involved in a collision with another train"
+    ],
+    "context": "",
+    "answer": "B",
+    "rationale": "The image of soot covering the front of the train indicates that the train has not been washed in some time.\nThe blue sky in the background suggests that there was no rain in the forecast that day, which eliminates option A.\nFinally, there is no visual evidence of the train being involved in a collision with another train, thus option D is incorrect.\nTherefore, option B is the correct answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1436.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The image shows that there is visible dirt or grime on parts of the locomotive's exterior, particularly around its windows and near the headlights. This could be due to several reasons:\n\nA. **The train was caught in a rainstorm:** - Trainsns can often get dusty during travel over dry terrain but rain may contribute to this appearance.\n  \n B. **the train hasn't been washed for sometime** - Lack of regular maintenance might lead trains collecting dust.\n\n D. **All optionsarepossible**, as it also be due to any combination of factors such as weather conditions (rain, wind), use lack of cleaning, or even minor accidents like light impacts from rocks.\n\nWithout further information about recent events involving the train, we cannot conclusively determine which factor(s) contributes most likely to why th appears so dirty. However, based solely o visual evidence, option C (\"all options poss\" seems plausible.  Therefore,\n\nFinal answer:\n*C* \" all options posssible*.<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1413",
+    "category": "Status",
+    "image_id": "commonsense-physical-commonsense-1328",
+    "question": "Based on the image, what can be inferred about the time period of this train station?",
+    "choices": [
+        "It is a brand new station",
+        "It was built within the last decade",
+        "It is an old station",
+        "It was built within the last 5 years"
+    ],
+    "context": "",
+    "answer": "C",
+    "rationale": "The rusty train tracks and the grey and red train are typical of an older train station. \nThe presence of precipitation on the window further suggests that this station has been around for some time and has likely endured several weather cycles. \nChoice a and d can be ruled out based on the age of the infrastructure, and choice b is not supported by the image.\nTherefore, option C is the correct answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1413.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The question provided does not specify which part of the image to base your inference upon regarding the train or its where it may indicate something refers only to \"train\" and not necessarily related to 'station'. If we assume that by \"train\" you meant the vehicle depicted in:\n\n- **A. Brand New Station:** - There's no specific indicator (like modern design elements, signage) )inthe image that suggest it\u2019s a brand-new structure.\n  \n- **B. Built Within The Last Decade** - While there the train appears to be relatively current with features like window tinting, but we don not have enought information to confirm if it was recently constructed.\n\n- **C An\n addCriterion\n !*** This\n \u81ea\u52a8\u751f\u6210\u7684\u56fe\u7247\u6587\u5b57\u4fe1\u606f\uff1a```json\n[\n\t{\"bbox_2d\": [140, 37\n<|im_start|>GuidId}: 0,\n\t\"value\": \"6078\"\n]\n```\n<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1373",
+    "category": "Shape",
+    "image_id": "commonsense-physical-commonsense-411",
+    "question": "What types of fruits are in the picture?",
+    "choices": [
+        "Grapes, orange, apple, banana",
+        "Orange, apple, banana, peach",
+        "Grapes, orange, apple, pear",
+        "Orange, apple, banana, cherry"
+    ],
+    "context": "",
+    "answer": "A",
+    "rationale": "The several grapes grouped together and the jumbled assortment of different fruits suggest that this is a fruit platter.\nThe orange colored rind behind an apple indicates that there is an orange in the picture.\nThe sleek yellow peel off to the right clues at an unpeeled banana. However, there is no evidence for a peach or a cherry.\nTherefore, (A) \"Grapes, orange, apple, banana\" is the correct answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1373.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The image shows grapes (green), an orange, and what appears to be part of another fruit that might resemble either bananas or peaches depending on how it is sliced into appear like. The correct answer would likely depend more on the visible portion than the type one that doesn't show clearly\n\n**Final Answer:** A \n<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1372",
+    "category": "Temperature",
+    "image_id": "commonsense-physical-commonsense-372",
+    "question": "What can you infer about the scene?",
+    "choices": [
+        "It is a sunny day",
+        "It is a summer season",
+        "It is a kite flying festival",
+        "It is a windy day"
+    ],
+    "context": "",
+    "answer": "D",
+    "rationale": "There are many clouds in the sky, it's not a sunny day, but it's not raining either.\nThe many kites in the sky and the man holding the kite string suggest that it is a kite flying festival, indicateing that it is windy.\nTherefore, (D) \"It is a windy day\" is the correct answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1372.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The image shows several kites in flight, and one person appears to be actively controllinging or managing them kite with long strings attached (possibly an octopus-shaped kite). The sky looks overcast but not particularly bright.\n\nGiven\n !*** \n<|im_start|>\n addCriterion:\nBased on these observations:\n\nA) **It's likely that it\u2019s a cloudy or overcast day**, rather than \"a\" sunyy\n \u81ea\u52a8\u751f\u6210\uff1a\nday\". Therefore option A cannot be inferred correctly from this scenario.\nB)** It might**not necessarily indicate the season as clouds do occur during all seasons, though option B isn't incorrect.\nC) **It is a kite-flying event:** seems unlikely because there does show multiple people involved and potentially many types of kites being flown simultaneously, so option C could also not be confidently concluded solely based off on visual information available.\n D)** It is most certainly probably a wind[y]d day** since strong of string tension and movement of the kites indicates wind presence.<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1399",
+    "category": "Temperature",
+    "image_id": "commonsense-physical-commonsense-394",
+    "question": "What can you infer about the current weather conditions?",
+    "choices": [
+        "It is cloudy and overcast",
+        "It is warm and sunny",
+        "It is cold and snowy",
+        "It is foggy and misty"
+    ],
+    "context": "",
+    "answer": "B",
+    "rationale": "The big shadows cast by the skis and the tall shadow nearby suggest that the sun is low in the sky and is shining.\nThe sun reflecting off of the snow suggests that it is sunny.\nTherefore, (B) \"It is warm and sunny\" is the right answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1399.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The image shows skisis\n addCriterion:\nA ski pole, two skis\n !*** \n iParam\n<|im_start|>\n \u81ea\u52a8\u751f\u6210\uff1a\n A\niParam\n<|im_start|>\nuParam\n<|im_end|>"
+}
+{
+    "id": "physical-commonsense-1347",
+    "category": "Temperature",
+    "image_id": "commonsense-physical-commonsense-143",
+    "question": "What can we infer about the person in the picture?",
+    "choices": [
+        "They have 20/20 vision",
+        "They are sad or angry",
+        "They are warm",
+        "All options are correct"
+    ],
+    "context": "",
+    "answer": "C",
+    "rationale": "We can infer that the person is warm as they are wearing a heavy blanket.\nAdditionally, we know that they are not sad or angry because there is a smile on their face.\nAnd we know they do not have perfect vision since they are wearing glasses.\nTherefore, option C is the correct answer.",
+    "split": "test",
+    "image": "images/physical-commonsense-1347.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "Let\n addCriterion:\nThe image shows two men sitting and having each other, with one of them speaking while smiling and gesturinging toward himself. The text at him is subtitles from a movie that says:\n\n\"She comes on cultural exchange... university sends its's trusty radical me...\"\n\nFrom this information alone it doesn't provide direct insight into their health or age, as there they could be wearing glasses that make them appear younger than they really are.\n\nSo\nmatchCondition:\nNone\n\n- A \"They have 20/20 eyes\" - We don not see anything to suggest if the person has perfect vision.\n  \n- B) \"they are sad or angry\" - There no evidence here that suggests any they're sad or angry; rather they look calm and happy.\n\n- C)`they are warm` - They do seem warm, possibly because o theye have blankets draped over themselves for warmth.\n\nTherefore,\nAnswer: C. They are warm<|im_end|>"
+}
+{
+    "id": "physics-1074",
+    "category": "Materials",
+    "image_id": "commonsense-physical-commonsense-5074",
+    "question": "Which property do these three objects have in common?",
+    "choices": [
+        "fragile",
+        "sticky",
+        "fuzzy"
+    ],
+    "context": "Select the best answer.",
+    "answer": "C",
+    "rationale": "Step 1: Examine each individual object.\nStep 2: Determine if each object possesses the specified property.\nStep 3: Identify that a fuzzy object is characterized by being covered in soft hair.\nStep 4: Confirm that all three objects in question possess the property of being fuzzy.\nStep 5: Observe that none of the objects exhibit the property of stickiness.\nStep 6: Note that none of the objects are considered fragile, as they will not break into pieces if dropped.\nStep 7: Conclude that the common property shared by all three objects is fuzziness.\nStep 8: Therefore, the correct choice is option \"(C) fuzzy\".",
+    "split": "test",
+    "image": "images/physics-1074.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The property that all three of the objects (tennis ball, slippers, and stuffed dice) share is:\n\nC\n addCriterion\nC\nmatchCondition\nc0d81f42-5f63-4897-bbca-e8ce33ddcb1a<|im_end|>"
+}
+{
+    "id": "physics-1152",
+    "category": "Materials",
+    "image_id": "commonsense-physical-commonsense-5152",
+    "question": "Which property do these two objects have in common?",
+    "choices": [
+        "rough",
+        "smooth"
+    ],
+    "context": "Select the better answer.",
+    "answer": "A",
+    "rationale": "Step 1: Examine each object individually.\nStep 2: Determine if each object possesses the property being evaluated.\nStep 3: When touching a rough object, it feels scratchy. Both objects are identified as rough.\nStep 4: On the other hand, a smooth object does not feel scratchy or rough. Neither of the objects can be classified as smooth.Both objects have scratches on their surfaces\nStep 5: The shared characteristic between the two objects is roughness.\nStep 6: Consequently, the correct option is \"(A) rough\".",
+    "split": "test",
+    "image": "images/physics-1152.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "To determine which property the log and tree bark share, let's analyze their:\n\n- The image of \"log\" shows a piece of wood with some branches attached.\n  - Its surface appears to be somewhat textured but not very smooth.\n\n- The image of \"tree bark\" depicts an outer layer of a tree trunk showing a detailed texture that is typically rough due to its ridges and grooves.\n\nBased on this analysis:\nA. Both images show surfaces that can appear rough rather than smooth.\n\nTherefore, the correct answer would A: rough as it\u2019s likely true for both the log (wood\n addCriterioning<|im_end|>"
+}
+{
+    "id": "physics-1413",
+    "category": "Materials",
+    "image_id": "commonsense-physical-commonsense-5413",
+    "question": "Which property do these four objects have in common?",
+    "choices": [
+        "salty",
+        "stretchy",
+        "transparent"
+    ],
+    "context": "Select the best answer.",
+    "answer": "A",
+    "rationale": "Step 1: Examine each object individually.\nStep 2: Determine if each object possesses the specified property.\nStep 3: A stretchy object elongates when force is applied. However, the potato chips and the pretzel are not stretchy.\nStep 4: Potato chips are known for their salty taste. It is important to note that all four objects are salty.\nStep 5: A transparent object allows clear visibility through it. However, the potato chips, the pretzel, and the fries are not transparent.\nStep 6: The common property among all four objects is their saltiness.\nStep 7: Consequently, option A is the correct choice.",
+    "split": "test",
+    "image": "images/physics-1413.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The image shows the following items:\n\n1. Ocean water (a liquid)\n2. Potato chips packets and chips themselves, which typically contain salt.\n3. A Pretzel, which is often seasoned with salt on its.\n4. F French fries that canre also usually served as a side snack or meal complemented by salts.\n\nGiven\n<|im_start|>\n addCriterion\n<|im_start|>\n \u81ea\u52a8\u751f\u6210\u7684\u9009\u9879\uff1aA. salty\n\nOption B is not relevant to any this question. Option C is incorrect because none of theme these items appear translucent or transparent.<|im_end|>"
+}
+{
+    "id": "physics-1523",
+    "category": "Materials",
+    "image_id": "commonsense-physical-commonsense-5523",
+    "question": "Which property do these four objects have in common?",
+    "choices": [
+        "fragile",
+        "stretchy",
+        "sour"
+    ],
+    "context": "Select the best answer.",
+    "answer": "B",
+    "rationale": "Step 1: Examine each object individually.\nStep 2: Determine if each object possesses the specified property.\nStep 3: If an object is fragile, it will break into pieces when dropped. However, the rubber band is not fragile.\nStep 4: If an object is stretchy, it will elongate when pulled. All four objects demonstrate stretchiness.\nStep 5: If a lemon is tasted, it will be sour. Yet, the melted marshmallow does not possess a sour taste.\nStep 6: The common property observed in all four objects is stretchiness.\nStep 7: Therefore, the appropriate choice is option \"(B) stretchy\".",
+    "split": "test",
+    "image": "images/physics-1523.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The image shows the following items:\n\n1. Helium balloons - can these, one could be stretched but they will not return to their initial shape.\n2. Bubble gum - it can can be chewed and stretched before breaking.\n3. Rubber band - this is specifically designed for stretchingability.\n4. Melted marshmallow - when cooled down, it becomes solid again.\n\nAmong all of themse, rubber bands (option B) stretch) ) share the common characteristic that most closely as they ar esignede fo r strechh ability. \n\nSo\n<|im_start|>\nstyleType:\nA. fragile\n\nFinal Answer: A\n addCriterion\n<|im_end|>"
+}
+{
+    "id": "physics-864",
+    "category": "Materials",
+    "image_id": "commonsense-physical-commonsense-4864",
+    "question": "Which property do these three objects have in common?",
+    "choices": [
+        "slippery",
+        "sweet",
+        "salty"
+    ],
+    "context": "Select the best answer.",
+    "answer": "C",
+    "rationale": "Step 1: Examine each object individually.\nStep 2: Determine if each object possesses the specified property.\nStep 3: Observe that sugar has a sweet taste, but none of the objects in question are sweet.\nStep 4: Note that potato chips have a salty taste, whereas all three objects exhibit a salty taste.\nStep 5: Recognize that a slippery object is difficult to grip or stand on, but the potato chips and pretzel are not slippery.\nStep 6: Identify the property shared by all three objects as being salty.\nStep 7: Therefore, the correct choice is option C.",
+    "split": "test",
+    "image": "images/physics-864.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "To determine the common property among potato chips, ocean water, and pretzel, let's analyze each item:\n\n1. **Potato Chips**: These typically contain salt as an ingredient.\n2. **Ocean Water**: It is known for its being saline (containinging sodium chloride), which makes it taste slightly salty when consumed directly but sea food itself, due to salinity of oceans).\n3. **Pretzel**: Pretzels often includes salt on top or inside as part o fthe cooking process.\n\nGiven all three items can share a common attribute that they can all likely be salty:\n- Therefore , The correct answer is C. salty .<|im_end|>"
+}
+{
+    "id": "physics-26",
+    "category": "Materials",
+    "image_id": "commonsense-physical-commonsense-4026",
+    "question": "Which property do these two objects have in common?",
+    "choices": [
+        "sticky",
+        "yellow"
+    ],
+    "context": "Select the better answer.",
+    "answer": "B",
+    "rationale": "Step 1: Examine each object.\nStep 2: For each object, determine if it possesses the stated attribute.\nStep 3: A sticky object has the ability to adhere to other objects. However, neither of the objects in question are sticky.\nStep 4: It is known that yellow is a color.\nStep 5: Both objects possess the color yellow.\nStep 6: The attribute shared by both objects is the color yellow.\nStep 7: Consequently, option (B) yellow should be chosen.",
+    "split": "test",
+    "image": "images/physics-26.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The correct answer is B. yellow.\n\nBoth the rubber gloves and rain boots shown in the image share the color yellow as their primary characteristic of both items' design or illustration.<|im_end|>"
+}
+{
+    "id": "physics-228",
+    "category": "Materials",
+    "image_id": "commonsense-physical-commonsense-4228",
+    "question": "Which property do these three objects have in common?",
+    "choices": [
+        "rough",
+        "colorful",
+        "transparent"
+    ],
+    "context": "Select the best answer.",
+    "answer": "B",
+    "rationale": "Step 1: Examine each object.\nStep 2: Determine if each object has the given property.\nStep 3: A rough object is identified by feeling scratchy when touched. The crayons and the parachute do not exhibit this property.\nStep 4: A transparent object allows for clear visibility through it. None of the objects are transparent.\nStep 5: A colorful object is characterized by having one or more bright colors. All three objects are colorful.\nStep 6: Conclude that the property shared by all three objects is being colorful.\nStep 7: Therefore, option (B) colorful should be chosen.",
+    "split": "test",
+    "image": "images/physics-228.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "Let's analyze each object to determine the shared property:\n\n1. **Inflatable castle**: Typically has bright and varied colors.\n2.<|vision_start|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|image_pad|><|vision_end|> **Parachute:**<|im_end|>"
+}
+{
+    "id": "physics-1010",
+    "category": "Materials",
+    "image_id": "commonsense-physical-commonsense-5010",
+    "question": "Which property do these three objects have in common?",
+    "choices": [
+        "opaque",
+        "scratchy",
+        "transparent"
+    ],
+    "context": "Select the best answer.",
+    "answer": "A",
+    "rationale": "Step 1: Examine each object individually.\nStep 2: Determine whether each object possesses the specified property.\nStep 3: It is evident that none of the objects are transparent, as they cannot be seen through clearly.\nStep 4: None of the objects are scratchy, as they do not feel rough or itchy against the skin.\nStep 5: All three objects are opaque, meaning they do not allow light to pass through.\nStep 6: The property shared by all three objects is their opaqueness.\nStep 7: Therefore, option A is the correct choice.",
+    "split": "test",
+    "image": "images/physics-1010.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "To determine which property the eraser, crayons, and rubber ball share in common, let's analyze each object:\n\n1. **Eraser**: An\n<|im_start|>\n addCriterion\n<|endoftext|>"
+}
+{
+    "id": "physics-845",
+    "category": "Materials",
+    "image_id": "commonsense-physical-commonsense-4845",
+    "question": "Which property do these three objects have in common?",
+    "choices": [
+        "hard",
+        "bouncy",
+        "stretchy"
+    ],
+    "context": "Select the best answer.",
+    "answer": "A",
+    "rationale": "Step 1: Examine each object individually.\nStep 2: Determine if each object possesses the given property.\nStep 3: A hard object maintains its shape when pressed or squeezed. All three objects demonstrate hardness.\nStep 4: A bouncy object will rebound from the floor after being dropped. Neither the magnifying glass nor the rainbow sucker exhibit bounciness.\nStep 5: A stretchy object elongates when pulled. None of the objects are stretchy.\nStep 6: The shared property among all three objects is hardness.\nStep 7: Consequently, the correct answer is option A.",
+    "split": "test",
+    "image": "images/physics-845.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "Let's analyze the properties of each object:\n\n1. **Magnifying glass**: Typically, magnifying glasses can not be eaten and they usually have a lens that is hard but the handle might vary.\n2. **Rainbow sucker (lollipop)**: L These typically come with soft candy on top which may melt or change form over time.\n3. **Car bumper**: Car bumpersers generally made from materials like plastic or metal, they\u2019re designed to absorb impact so they need hard.\n\nBased on this analysis:\n- The **magnifyingng glass** has no particular association for bouncing or flexibility.\n- The **rainbow sucker/lollipop** isn't known as something being it\u2019s sweet edible product.\n- The car bumper is hard.\n\nThe only shared characteristic among all seems to be hardness; hence,\n\nOption A. Hard\n\nis\n<|im_start|><|im_start|>\nstyleType B<|im_end|>"
+}
+{
+    "id": "physics-1029",
+    "category": "Materials",
+    "image_id": "commonsense-physical-commonsense-5029",
+    "question": "Which property do these three objects have in common?",
+    "choices": [
+        "fragile",
+        "transparent",
+        "flexible"
+    ],
+    "context": "Select the best answer.",
+    "answer": "C",
+    "rationale": "Step 1: Examine each object individually.\nStep 2: Determine if each object possesses a specific property.\nStep 3: Transparent objects enable clear visibility, but none of the objects in question are transparent.\nStep 4: Flexible objects can be folded or bent without breaking easily, and all three objects exhibit flexibility.\nStep 5: Fragile objects will break into pieces when dropped, but both the rubber band and rain boots are not fragile.\nStep 6: The shared property among all three objects is flexibility.\nStep 7: Therefore, the correct choice is option C.",
+    "split": "test",
+    "image": "images/physics-1029.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "Let's analyze each object:\n\n1. **Rubber band**: Typically made of rubber, it is known for its being stretchyable and can be deformed.\n2. **Rain boots**: While they may not bend easily like the other first two items due to their they're hard plastic or rubber at that protects from water.\n3. **Flip-flops**: These are also designed with straps usually made of soft material which allows allow flexibility.\n\nGiven the question asks about properties all three share \" together:\n- **Flexible** - The rubber band (as well as flip-flops) both exhibit show this characteristic when stretched or foldeded).\n- **Transparent** - None o them these three look trasnparent.\n- **Fragile** - Rain boots are are generally more durable than the others.\n\nThus, based on analysis, the correct answer would be C. Flexible. \n\nThe final answer is C. Flexible.<|im_end|>"
+}
+{
+    "id": "physics-364",
+    "category": "Materials",
+    "image_id": "commonsense-physical-commonsense-4364",
+    "question": "Which property do these three objects have in common?",
+    "choices": [
+        "rough",
+        "soft",
+        "transparent"
+    ],
+    "context": "Select the best answer.",
+    "answer": "A",
+    "rationale": "Step 1: Examine each object.\nStep 2: For each object, determine if it possesses the property being considered.\nStep 3: A transparent object allows clear vision through it. However, none of the objects under consideration are transparent.\nStep 4: A rough object feels abrasive when touched. In this case, all three objects are rough.\nStep 5: A soft object can change its shape when pressed or squeezed. However, none of the objects exhibit this characteristic.\nStep 6: The common property that all three objects share is roughness.\nStep 7: Consequently, option \"(A) rough\" is the appropriate choice.",
+    "split": "test",
+    "image": "images/physics-364.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "To determine which property the three objects (sidewalk, log\n addCriterion\n<|im_start|>\n \u81ea\u52a8\u751f\u6210\n sidewalk), and rock) share in common:\n\n1. **Sidewalk**: Typically made of concrete or stone.\n2. **Log**: A\nstyleType=\"image\" src=\"https://i.imgur.com/\n<|im_start|>\n !***[log](https://i.imgur.com/a.png \" \"!)--\n\n3. **Rock**: Naturally occurring solid material.\n\n- **Option A: Rough**\n  - Sidewalks typically has an uneven surface due to wear over time but make it feel rugged and not smooth.\n  \n- Option B: Soft\n   - The properties associated with this option don need be applied as sidewalks usually aren't hard surfaces while logs and rocks can tend to be firm\nGuidId<|im_end|>"
+}
+{
+    "id": "physics-1196",
+    "category": "Materials",
+    "image_id": "commonsense-physical-commonsense-5196",
+    "question": "Which property do these three objects have in common?",
+    "choices": [
+        "slippery",
+        "stretchy",
+        "scratchy"
+    ],
+    "context": "Select the best answer.",
+    "answer": "A",
+    "rationale": "Step 1: Examine each object individually.\nStep 2: Determine if each object possesses the specified property.\nStep 3: Notice that a slippery object is difficult to grip or stand on, and all three objects fall under this category.\nStep 4: Recognize that a stretchy object elongates when pulled, but none of the objects exhibit this characteristic.\nStep 5: Observe that a scratchy object feels rough and causes itchiness, but none of the objects have this attribute.\nStep 6: Identify that the shared property among all three objects is slipperiness.\nStep 7: Therefore, the correct choice is option A.",
+    "split": "test",
+    "image": "images/physics-1196.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "The image shows yogurt, an ice cube that is wet (thus not dry), and soap which can has been washed or used before so it appears to be slightly damp.\n\nAmong the options given:\n\nA. Slippery - The wet surface of all three items suggests this might apply.\nB. Stretchable \u2013 This does not seem applicable as there none appear flexible enough for stretchingability like plastic.\nC Scratchy \u2013 None suggest they would cause scratches on skin upon contact.\n\nTherefore:\n- Option A Slippery seems most fitting here since each object's appearance implies potential slipperiness due to water content. \n\nFinal answer : A slippery<|im_end|>"
+}
+{
+    "id": "physics-305",
+    "category": "Materials",
+    "image_id": "commonsense-physical-commonsense-4305",
+    "question": "Which property do these three objects have in common?",
+    "choices": [
+        "smooth",
+        "scratchy",
+        "sticky"
+    ],
+    "context": "Select the best answer.",
+    "answer": "A",
+    "rationale": "Step 1: Examine each object individually.\nStep 2: Determine if each object possesses the specified property.\nStep 3: A scratchy object is characterized by a rough and itchy texture when in contact with the skin. However, none of the objects display this property.\nStep 4: A smooth object, on the other hand, does not exhibit a rough or scratchy texture. All three objects possess a smooth texture.\nStep 5: Similarly, a sticky object can adhere to or stick to other objects. None of the objects possess this property.\nStep 6: Therefore, the common property shared by all three objects is smoothness.\nStep 7: Consequently, the appropriate response is option \"(A) smooth\".",
+    "split": "test",
+    "image": "images/physics-305.png",
+    "domain": "commonsense",
+    "topic": "physical-commonsense",
+    "pred": "Let's analyze the properties of each object:\n\n1. **Metal bar**: Typically, metal bars are not boznot be considered toys and usually donbe used for construction or otherbuilding purposes.\n2. **Fish bowl**: The fish inside is smooth to touch butbut the glass container itself canisalso be described as relatively smooth on itsthe outside surface thatit it isn't made from clear material.\n3. **Pool toy (snake)**: Pool toys often have smooth surfaces sothat they cancan float well oin water.\n\nConsidering all options together:\n- **Smooth** fits best because most pool toys like this snake would typically be designed with a smooth surface.\n\nTherefore, the correct answer should consider their Asmoothness. \n\nSo, the option \"A. smooth<|im_end|>"
+}
