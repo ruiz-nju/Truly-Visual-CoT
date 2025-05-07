@@ -1,6 +1,6 @@
 import argparse
 import os
-from utils.tools import read_json, print_info
+from utils.tools import read_json, print_info, DATASET_TO_FULL_NAME, MODEL_TO_FULLNAME
 from utils.logger import setup_logger
 import time
 import torch
@@ -8,14 +8,6 @@ import time
 from tqdm import tqdm
 import pandas as pd
 import json
-
-model_to_fullname = {
-    "llava": "llava-hf/llava-1.5-7b-hf",
-    "blip": "Salesforce/instructblip-vicuna-7b",
-    "qwen2_5": "Qwen/Qwen2.5-VL-7B-Instruct",
-    "qwen2": "Qwen/Qwen2-VL-7B-Instruct",
-}
-dataset_to_full_name = {"mathvista": "AI4Math/MathVista"}
 
 
 def get_full_metrics_str(metrics_dict) -> str:
@@ -69,7 +61,8 @@ def get_acc_with_contion(res_pd, key, value):
     return len(correct_pd), len(total_pd), acc
 
 
-def calculation_mathvista(
+def calculation(
+    dataset_name,
     input_file_path,
     output_file_path,
     period,
@@ -93,64 +86,59 @@ def calculation_mathvista(
 
     accuracy = correct / total
     scores = {"average": {"accuracy": accuracy, "correct": correct, "total": total}}
+    if dataset_name == "mathvista":
+        results_df = pd.DataFrame(results).T
+        # asign the target keys for evaluation
+        target_keys = [
+            "question_type",
+            "answer_type",
+            "language",
+            "source",
+            "category",
+            "task",
+            "context",
+            "grade",
+            "skills",
+        ]
+        for key in target_keys:
+            # get the unique values of the key
+            if key == "skills":
+                # the value is a list
+                values = []
+                for i in range(len(results_df)):
+                    values += results_df[key][i]
+                values = list(set(values))
+            else:
+                values = results_df[key].unique()
 
-    for pid in results:
-        results[pid].update(results[pid].pop("metadata"))
+            # calculate the accuracy for each value
+            scores[key] = {}
+            for value in values:
+                correct, total, acc = get_acc_with_contion(results_df, key, value)
+                if total > 0:
+                    scores[key][value] = {
+                        "accuracy": acc,
+                        "correct": correct,
+                        "total": total,
+                    }
 
-    results_df = pd.DataFrame(results).T
-
-    # asign the target keys for evaluation
-    target_keys = [
-        "question_type",
-        "answer_type",
-        "language",
-        "source",
-        "category",
-        "task",
-        "context",
-        "grade",
-        "skills",
-    ]
-
-    for key in target_keys:
-        # get the unique values of the key
-        if key == "skills":
-            # the value is a list
-            values = []
-            for i in range(len(results_df)):
-                values += results_df[key][i]
-            values = list(set(values))
-        else:
-            values = results_df[key].unique()
-
-        # calculate the accuracy for each value
-        scores[key] = {}
-        for value in values:
-            correct, total, acc = get_acc_with_contion(results_df, key, value)
-            if total > 0:
-                scores[key][value] = {
-                    "accuracy": acc,
-                    "correct": correct,
-                    "total": total,
-                }
-
-        # sort the scores by accuracy
-        scores[key] = dict(
-            sorted(
-                scores[key].items(),
-                key=lambda item: float(item[1]["accuracy"]),
-                reverse=True,
+            # sort the scores by accuracy
+            scores[key] = dict(
+                sorted(
+                    scores[key].items(),
+                    key=lambda item: float(item[1]["accuracy"]),
+                    reverse=True,
+                )
             )
-        )
 
-    metrics_str = get_full_metrics_str(scores)
-    print(metrics_str)
+        metrics_str = get_full_metrics_str(scores)
+        print(metrics_str)
 
     print(f"Saving scores to {output_file_path}")
     with open(output_file_path, "w") as f:
         json.dump(scores, f, indent=4)
 
-    print("MathVista: Calculating Scores - Finish")
+    print("Calculating Scores - Finish")
 
 
 def main(args):
@@ -158,7 +146,7 @@ def main(args):
     dataset = args.dataset
     period = args.period
     if period == "origin":
-        output_dir = os.path.join("outputs_origin", dataset, model_name)
+        output_dir = os.path.join("outputs_origin_old", dataset, model_name)
     elif period == "refocus":
         output_dir = os.path.join("outputs_refocus", dataset, model_name)
     else:
@@ -172,25 +160,23 @@ def main(args):
         dataset_name=dataset,
         period=period,
     )
-    if dataset == "mathvista":
-        output_file_path = os.path.join(output_dir, "calculated_score.json")
-        input_file_path = os.path.join(output_dir, "extracted_answer.json")
-        calculation_mathvista(
-            input_file_path=input_file_path,
-            output_file_path=output_file_path,
-            period=period,
-        )
-    else:
-        raise ValueError(f"Dataset {dataset} not supported")
+    output_file_path = os.path.join(output_dir, "calculated_score.json")
+    input_file_path = os.path.join(output_dir, "extracted_answer.json")
+    calculation(
+        dataset_name=dataset,
+        input_file_path=input_file_path,
+        output_file_path=output_file_path,
+        period=period,
+    )
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--model_name", type=str, default="qwen2_5", choices=model_to_fullname.keys()
+        "--model_name", type=str, default="qwen2_5", choices=MODEL_TO_FULLNAME.keys()
     )
     parser.add_argument(
-        "--dataset", type=str, default="mathvista", choices=dataset_to_full_name.keys()
+        "--dataset", type=str, default="mathvista", choices=DATASET_TO_FULL_NAME.keys()
     )
     parser.add_argument(
         "--period",

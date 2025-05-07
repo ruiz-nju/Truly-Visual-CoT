@@ -4,15 +4,28 @@ from PIL import Image
 from io import BytesIO
 import re
 import time
+import jsonlines
+import torch
 
-model_to_fullname = {
+MODEL_TO_FULLNAME = {
     "llava": "llava-hf/llava-1.5-7b-hf",
     "blip": "Salesforce/instructblip-vicuna-7b",
     "qwen2_5": "Qwen/Qwen2.5-VL-7B-Instruct",
     "qwen2": "Qwen/Qwen2-VL-7B-Instruct",
+    "chameleon": "facebook/chameleon-7b",
 }
 
-dataset_to_full_name = {"mathvista": "AI4Math/MathVista"}
+DATASET_TO_FULL_NAME = {
+    "mathvista": "AI4Math/MathVista",
+    "m3cot": "LightChen2333/M3CoT",
+}
+
+USE_EAMPLE = True
+
+EXAMPLE_IMAGE_PATH = "/mnt/hdd/zhur/code/Truly-Visual-CoT/data/mathvista/images/980.jpg"
+EAMPLE_PROMPT = "When you output <REFOCUS>, revisit the picture and check some key conditions that are relevant to the reasoning at hand. you should Here is an example question and answer pair that can be used for reference.\n\nExample question:\n\nWhat is the highest number shown?\n\nExample response:\n\nTo determine the highest number shown on the clock in the image:\n\n1. Identify the numbers on the clock face.\n2. Compare these numbers to find the largest one. <REFOCUS> The clock face shows the numbers 1 through 12, which are standard for clock faces. The highest number among these is 12.\n\nFinal answer: 12"
+
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 def read_json(path):
@@ -82,8 +95,8 @@ def print_info(module_name, model_name, dataset_name, period):
         f"""
     "================================================================"
     "🚀 Running  {module_name}"
-    "📦 Model:   {model_to_fullname[model_name]}"
-    "📚 Dataset: {dataset_to_full_name[dataset_name]}"
+    "📦 Model:   {MODEL_TO_FULLNAME[model_name]}"
+    "📚 Dataset: {DATASET_TO_FULL_NAME[dataset_name]}"
     "📅 Period:  {period}"
     "⏰ Time:    {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}"
     "================================================================"

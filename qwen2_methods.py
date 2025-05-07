@@ -12,17 +12,13 @@ import numpy as np
 from PIL import Image
 
 
-def prepare_qwen2_5_input(
+def prepare_qwen2_input(
     user_prompt,
     image_path,
     processor,
     cur_generation=None,
     additional_image_path=None,
 ):
-    """
-    Prepare the input for Qwen2.5VL.
-    """
-
     image = Image.open(image_path)
     image_str = encode_base64(image=image)
     if USE_EAMPLE:
@@ -47,8 +43,11 @@ def prepare_qwen2_5_input(
             {
                 "role": "user",
                 "content": [
-                    {"type": "image", "image": f"data:image;base64,{image_str}"},
-                    {"type": "text", "text": user_prompt},
+                    {
+                        "type": "image",
+                        "image": f"data:image;base64,{image_str}",
+                        "text": user_prompt,
+                    },
                 ],
             },
         ]
@@ -56,7 +55,6 @@ def prepare_qwen2_5_input(
         user_message, tokenize=False, add_generation_prompt=True
     )
     if cur_generation:
-        # TODO 若需要添加图片，如何处理额外的图片信号
         text = text + cur_generation
     image_inputs, video_inputs = process_vision_info(user_message)
     inputs = processor(
@@ -66,23 +64,21 @@ def prepare_qwen2_5_input(
         padding=True,
         return_tensors="pt",
     )
-
     return inputs
 
 
-def get_response_qwen2_5(
+def get_response_qwen2(
     user_prompt,
     image_path,
     model,
     processor,
-    cur_generation=None,
-    additional_image_path=None,
+    cur_generation,
 ):
-    inputs = prepare_qwen2_5_input(
-        user_prompt=user_prompt,
-        image_path=image_path,
-        processor=processor,
-        cur_generation=cur_generation,
+    inputs = prepare_qwen2_input(
+        user_prompt,
+        image_path,
+        processor,
+        cur_generation,
     ).to(DEVICE, torch.bfloat16)
     generate_ids = model.generate(**inputs, max_new_tokens=10192, do_sample=False)
     generation = processor.batch_decode(
@@ -91,17 +87,17 @@ def get_response_qwen2_5(
     return generation.split("\nassistant\n")[-1].strip()
 
 
-def get_attention_qwen2_5(
-    user_prompt, image_path, cur_generation, general_prompt, model, processor
+def get_attention_qwen2(
+    image_path, user_prompt, cur_generation, general_prompt, model, processor
 ):
     # 输入预处理
-    inputs = prepare_qwen2_5_input(
+    inputs = prepare_qwen2_input(
         user_prompt=user_prompt,
         image_path=image_path,
         processor=processor,
         cur_generation=cur_generation,
     ).to(DEVICE, torch.bfloat16)
-    general_inputs = prepare_qwen2_5_input(
+    general_inputs = prepare_qwen2_input(
         user_prompt=general_prompt,
         image_path=image_path,
         processor=processor,
@@ -120,10 +116,8 @@ def get_attention_qwen2_5(
         )
     vision_start_token_id = processor.tokenizer.convert_tokens_to_ids(
         "<|vision_start|>"
-    )  # 151652
-    vision_end_token_id = processor.tokenizer.convert_tokens_to_ids(
-        "<|vision_end|>"
-    )  # 151653
+    )
+    vision_end_token_id = processor.tokenizer.convert_tokens_to_ids("<|vision_end|>")
 
     # 定位视觉标记位置
     input_ids = inputs["input_ids"].tolist()[0]  # 获取所有 token

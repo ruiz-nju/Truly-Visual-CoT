@@ -6,7 +6,13 @@ import pdb
 from openai import AzureOpenAI, OpenAI
 from openai.types.chat import ChatCompletionContentPartParam, ChatCompletionMessageParam
 from PIL import Image
-from utils.tools import read_json, save_json, print_info
+from utils.tools import (
+    read_json,
+    save_json,
+    print_info,
+    DATASET_TO_FULL_NAME,
+    MODEL_TO_FULLNAME,
+)
 from utils.logger import setup_logger
 import time
 import torch
@@ -55,17 +61,9 @@ Model response: The correct answer is (B) 8/11.
 
 Extracted answer: B
 """
+EXTRACTOR = "ep-20250422234405-ddr6w"
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-
-model_to_fullname = {
-    "llava": "llava-hf/llava-1.5-7b-hf",
-    "blip": "Salesforce/instructblip-vicuna-7b",
-    "qwen2_5": "Qwen/Qwen2.5-VL-7B-Instruct",
-    "qwen2": "Qwen/Qwen2-VL-7B-Instruct",
-}
-
-dataset_to_full_name = {"mathvista": "AI4Math/MathVista"}
 
 
 # build gpt class
@@ -171,12 +169,16 @@ def create_test_prompt(demo_prompt, query, response):
     return full_prompt
 
 
-def extract_answer(extractor, response, problem, quick_extract=False):
-    question_type = problem["question_type"]
-    answer_type = problem["answer_type"]
-    choices = problem["choices"]
-    query = problem["query"]
-    pid = problem["pid"]
+def extract_answer(
+    question_type,
+    answer_type,
+    choices,
+    query,
+    pid,
+    extractor,
+    response,
+    quick_extract=False,
+):
 
     if response == "":
         return ""
@@ -344,7 +346,15 @@ def extraction_mathvista_origin(
         problem = results[pid]
         assert target in problem, f"Label '{target}' not found in problem"
         response = problem[target]
-        extraction = extract_answer(extractor, response, problem)
+        extraction = extract_answer(
+            question_type=problem["question_type"],
+            answer_type=problem["answer_type"],
+            choices=problem["choices"],
+            query=problem["query"],
+            pid=pid,
+            extractor=extractor,
+            response=response,
+        )
         # 将提取的答案保存到results中
         results[pid]["extraction"] = extraction
         # 将提取的答案标准化
@@ -370,9 +380,7 @@ def extraction_mathvista_origin(
     print("MathVista: Extract Answers - Finish")
 
 
-def extraction_mathvista_refocus(
-    input_file_path, output_file_path, extractor_name="ep-20250422234405-ddr6w"
-):
+def extraction_mathvista_refocus(input_file_path, output_file_path):
     target = "refocus_response"
 
     if not os.path.exists(input_file_path):
@@ -383,7 +391,7 @@ def extraction_mathvista_refocus(
         api_key=os.environ.get("ARK_API_KEY"),
     )
 
-    extractor = GPT_Model(client=client, model=extractor_name)
+    extractor = GPT_Model(client=client, model=EXTRACTOR)
     print(f"Extracting answers from {input_file_path}")
 
     if os.path.exists(output_file_path):
@@ -418,7 +426,15 @@ def extraction_mathvista_refocus(
         problem = results[pid]
         assert target in problem, f"Label '{target}' not found in problem"
         refocus_response = problem[target]
-        refocus_extraction = extract_answer(extractor, refocus_response, problem)
+        refocus_extraction = extract_answer(
+            question_type=problem["question_type"],
+            answer_type=problem["answer_type"],
+            choices=problem["choices"],
+            query=problem["query"],
+            pid=pid,
+            extractor=extractor,
+            response=refocus_response,
+        )
         # 将提取的答案保存到results中
         results[pid]["refocus_extraction"] = refocus_extraction
         # 将提取的答案标准化
@@ -444,12 +460,175 @@ def extraction_mathvista_refocus(
     print("MathVista: Extract Answers - Finish")
 
 
+def extraction_m3cot_origin(input_file_path, output_file_path):
+    target = "response"
+
+    if not os.path.exists(input_file_path):
+        raise FileNotFoundError(f"File {input_file_path} not found")
+    print(f"Saving results to {output_file_path}")
+    client = OpenAI(
+        base_url="https://ark.cn-beijing.volces.com/api/v3",  # 这里使用的是 DeepSeek V3 的api
+        api_key=os.environ.get("ARK_API_KEY"),
+    )
+
+    extractor = GPT_Model(client=client, model=EXTRACTOR)
+    print(f"Extracting answers from {input_file_path}")
+
+    if os.path.exists(output_file_path):
+        print(f"Loading existing {output_file_path}...")
+        existing_results = read_json(output_file_path)
+    else:
+        existing_results = {}
+
+    print(f"Loading {input_file_path}...")
+    results = read_json(input_file_path)
+    full_pids = list(results.keys())
+
+    skip_pids = []
+    for id, problem in existing_results.items():
+        prediction = problem.get("prediction")
+        true_false = problem.get("true_false")
+        if prediction is not None and true_false is not None:
+            results[id]["prediction"] = prediction
+            results[id]["true_false"] = true_false
+            skip_pids.append(problem["id"])
+
+    if len(skip_pids) > 0:
+        print(
+            f"Found existing results file with {len(skip_pids)} problems with valid prediction and true_false. Skipping these problems..."
+        )
+    test_pids = [pid for pid in full_pids if pid not in skip_pids]
+
+    print(f"Number of test problems to run: {len(test_pids)}")
+
+    save_every = 5
+    for i, id in enumerate(tqdm(test_pids, desc="Extracting answers")):
+        problem = results[id]
+        assert target in problem, f"Label '{target}' not found in problem"
+        response = problem[target]
+        query = problem["query"]
+        choices = problem["choices"]
+        question_type = "multi_choice"
+        answer_type = None
+        precision = None
+        extraction = extract_answer(
+            question_type=question_type,
+            answer_type=answer_type,
+            choices=choices,
+            query=query,
+            pid=id,
+            extractor=extractor,
+            response=response,
+        )
+        # 将提取的答案保存到results中
+        results[id]["extraction"] = extraction
+        # 将提取的答案标准化
+        prediction = normalize_extracted_answer(
+            choices=choices,
+            question_type=question_type,
+            answer_type=answer_type,
+            precision=precision,
+            extraction=extraction,
+        )
+        answer = problem["answer"]
+        true_false = safe_equal(extraction, answer)
+        results[id]["prediction"] = prediction
+        results[id]["true_false"] = true_false
+
+        if (i % save_every == 0 and i > 0) or i == len(test_pids) - 1:
+            save_json(results, output_file_path)
+
+    print("M3CoT: Extract Answers - Finish")
+
+
+def extraction_m3cot_refocus(input_file_path, output_file_path):
+    target = "refocus_response"
+
+    if not os.path.exists(input_file_path):
+        raise FileNotFoundError(f"File {input_file_path} not found")
+    print(f"Saving results to {output_file_path}")
+    client = OpenAI(
+        base_url="https://ark.cn-beijing.volces.com/api/v3",  # 这里使用的是 DeepSeek V3 的api
+        api_key=os.environ.get("ARK_API_KEY"),
+    )
+
+    extractor = GPT_Model(client=client, model=EXTRACTOR)
+    print(f"Extracting answers from {input_file_path}")
+
+    if os.path.exists(output_file_path):
+        print(f"Loading existing {output_file_path}...")
+        existing_results = read_json(output_file_path)
+    else:
+        existing_results = {}
+
+    print(f"Loading {input_file_path}...")
+    results = read_json(input_file_path)
+    full_pids = list(results.keys())
+
+    skip_pids = []
+    for id, problem in existing_results.items():
+        prediction = problem.get("refocus_prediction")
+        true_false = problem.get("refocus_true_false")
+        if prediction is not None and true_false is not None:
+            results[id]["refocus_prediction"] = prediction
+            results[id]["refocus_true_false"] = true_false
+            skip_pids.append(problem["id"])
+
+    if len(skip_pids) > 0:
+        print(
+            f"Found existing results file with {len(skip_pids)} problems with valid prediction and true_false. Skipping these problems..."
+        )
+    test_pids = [pid for pid in full_pids if pid not in skip_pids]
+
+    print(f"Number of test problems to run: {len(test_pids)}")
+
+    save_every = 1
+    for i, id in enumerate(tqdm(test_pids, desc="Extracting answers")):
+        problem = results[id]
+        assert target in problem, f"Label '{target}' not found in problem"
+        refocus_response = problem[target]
+        query = problem["query"]
+        choices = problem["choices"]
+        question_type = "multi_choice"
+        answer_type = None
+        precision = None
+        # extraction = extract_answer(extractor, response, problem)
+        extraction = extract_answer(
+            question_type=question_type,
+            answer_type=answer_type,
+            choices=choices,
+            query=query,
+            pid=id,
+            extractor=extractor,
+            response=refocus_response,
+        )
+        # 将提取的答案保存到results中
+        results[id]["refocus_extraction"] = extraction
+        # 将提取的答案标准化
+        prediction = normalize_extracted_answer(
+            choices=choices,
+            question_type=question_type,
+            answer_type=answer_type,
+            precision=precision,
+            extraction=extraction,
+        )
+        answer = problem["answer"]
+        true_false = safe_equal(extraction, answer)
+        results[id]["refocus_prediction"] = prediction
+        results[id]["refocus_true_false"] = true_false
+
+        if (i % save_every == 0 and i > 0) or i == len(test_pids) - 1:
+            save_json(results, output_file_path)
+
+    print("M3CoT: Extract Answers - Finish")
+
+
 def main(args):
     model_name = args.model_name
     dataset = args.dataset
     period = args.period
     if period == "origin":
-        output_dir = os.path.join("outputs_origin", dataset, model_name)
+        output_dir = os.path.join("outputs_origin_old", dataset, model_name)
     elif period == "refocus":
         output_dir = os.path.join("outputs_refocus", dataset, model_name)
     else:
@@ -476,6 +655,19 @@ def main(args):
                 input_file_path=input_file_path,
                 output_file_path=output_file_path,
             )
+    elif dataset == "m3cot":
+        output_file_path = os.path.join(output_dir, "extracted_answer.json")
+        input_file_path = os.path.join(output_dir, "generated_response.json")
+        if period == "origin":
+            extraction_m3cot_origin(
+                input_file_path=input_file_path,
+                output_file_path=output_file_path,
+            )
+        elif period == "refocus":
+            extraction_m3cot_refocus(
+                input_file_path=input_file_path,
+                output_file_path=output_file_path,
+            )
     else:
         raise ValueError(f"Dataset {dataset} not supported")
 
@@ -483,10 +675,10 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--model_name", type=str, default="qwen2_5", choices=model_to_fullname.keys()
+        "--model_name", type=str, default="qwen2_5", choices=MODEL_TO_FULLNAME.keys()
     )
     parser.add_argument(
-        "--dataset", type=str, default="mathvista", choices=dataset_to_full_name.keys()
+        "--dataset", type=str, default="mathvista", choices=DATASET_TO_FULL_NAME.keys()
     )
     parser.add_argument(
         "--period",
