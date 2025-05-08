@@ -4,6 +4,7 @@ from utils.tools import (
     EXAMPLE_IMAGE_PATH,
     EAMPLE_PROMPT,
     DEVICE,
+    MAX_TOKENS,
 )
 import pdb
 import torch
@@ -80,7 +81,7 @@ def get_response_qwen2(
         processor,
         cur_generation,
     ).to(DEVICE, torch.bfloat16)
-    generate_ids = model.generate(**inputs, max_new_tokens=10192, do_sample=False)
+    generate_ids = model.generate(**inputs, max_new_tokens=MAX_TOKENS, do_sample=False)
     generation = processor.batch_decode(
         generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False
     )[0]
