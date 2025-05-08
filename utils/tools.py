@@ -22,7 +22,9 @@ DATASET_TO_FULL_NAME = {
 
 USE_EAMPLE = True
 
-EXAMPLE_IMAGE_PATH = "/mnt/hdd/zhur/code/Truly-Visual-CoT/data/mathvista/images/980.jpg"
+EXAMPLE_IMAGE_PATH = (
+    "/mnt/hdd/zhurui/code/Truly-Visual-CoT/data/mathvista/images/980.jpg"
+)
 EAMPLE_PROMPT = "When you output <REFOCUS>, revisit the picture and check some key conditions that are relevant to the reasoning at hand. you should Here is an example question and answer pair that can be used for reference.\n\nExample question:\n\nWhat is the highest number shown?\n\nExample response:\n\nTo determine the highest number shown on the clock in the image:\n\n1. Identify the numbers on the clock face.\n2. Compare these numbers to find the largest one. <REFOCUS> The clock face shows the numbers 1 through 12, which are standard for clock faces. The highest number among these is 12.\n\nFinal answer: 12"
 
 MAX_TOKENS = 5000
