@@ -380,6 +380,8 @@ def refocus(model_name, model, processor, user_prompt, image_path, ori_response)
         range(len(splited_response)),
         desc="Calculating attention of each splited sentence.",
     ):
+        if sentence_idx > 100:
+            break
         cur_generation = "\n\n".join(splited_response[: sentence_idx + 1])
         att_map = get_attention(
             model_name=model_name,
