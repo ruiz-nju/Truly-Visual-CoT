@@ -22,7 +22,6 @@ from transformers import (
 )
 from qwen2_5_methods import get_response_qwen2_5, get_attention_qwen2_5
 from qwen2_methods import get_response_qwen2, get_attention_qwen2
-from chameleon_methods import get_attention_chameleon, get_response_chameleon
 from transformers.models.chameleon.modeling_chameleon import (
     ChameleonForConditionalGeneration,
 )
@@ -90,7 +89,8 @@ def generation_mathvista_origin(model_name, data_dir, output_file_path):
 
     test_pids = [pid for pid in full_pids if pid not in skip_pids]
 
-    for i, problem_id in enumerate(tqdm(test_pids, desc="Generating origin response")):
+    for i, problem_id in enumerate(test_pids):
+        print(f"********* Problem id: {problem_id} [{i}/{len(test_pids)}] *********")
         problem = data[problem_id]
         image_path = os.path.join(data_dir, problem["image"])
         query = query_data[problem_id]
@@ -141,7 +141,8 @@ def generation_mathvista_refocus(model_name, output_file_path, input_file):
     test_pids = [pid for pid in full_pids if pid not in skip_pids]
     print(f"Number of test problems to run: {len(test_pids)}")
 
-    for i, pid in enumerate(tqdm(test_pids, desc="Generating refocus response")):
+    for i, pid in enumerate(test_pids):
+        print(f"********* Problem id: {pid} [{i}/{len(test_pids)}] *********")
         problem = results[pid]
         query = problem["query"]
         image_path = os.path.join("data/mathvista", problem["image"])
@@ -192,7 +193,8 @@ def generation_m3cot_origin(model_name, data_dir, output_file_path):
 
     test_ids = [id for id in full_ids if id not in skip_ids]
 
-    for i, problem_id in enumerate(tqdm(test_ids, desc="Generating origin response")):
+    for i, problem_id in enumerate(test_ids):
+        print(f"********* Problem id: {problem_id} [{i}/{len(test_ids)}] *********")
         problem = data[problem_id]
         image_path = os.path.join(data_dir, problem["image"])
         query = (
@@ -252,7 +254,8 @@ def generation_m3cot_refocus(model_name, output_file_path, input_file):
     test_ids = [id for id in full_pids if id not in skip_ids]
     print(f"Number of test problems to run: {len(test_ids)}")
 
-    for i, id in enumerate(tqdm(test_ids, desc="Generating refocus response")):
+    for i, id in enumerate(test_ids):
+        print(f"********* Problem id: {id} [{i}/{len(test_ids)}] *********")
         problem = results[id]
         query = problem["query"]
         image_path = os.path.join("data/m3cot", problem["image"])
@@ -272,28 +275,141 @@ def generation_m3cot_refocus(model_name, output_file_path, input_file):
             save_json(results, output_file_path)
 
 
+def generation_mathvision_origin(model_name, data_dir, output_file_path):
+    print(f"Saving results to {output_file_path}")
+    model, processor = get_model(model_name)
+    data_file = os.path.join(data_dir, "testmini.jsonl")
+    if not os.path.exists(data_file):
+        raise ValueError(f"Data file {data_file} not found")
+    data = open(data_file).readlines()
+    data = [json.loads(d) for d in data]
+    data = {d["id"]: d for d in data}
+    full_ids = list(data.keys())
+    if os.path.exists(output_file_path):
+        print(f"Loading existing {output_file_path}...")
+        results = read_json(output_file_path)
+    else:
+        results = {}
+
+    skip_ids = []
+    for problem_id in full_ids:
+        if problem_id in results and "response" in results[problem_id]:
+            response = results[problem_id]["response"]
+            if verify_response(response):
+                skip_ids.append(problem_id)
+
+    if len(skip_ids) > 0:
+        print(
+            f"Found existing results file with {len(skip_ids)} problems with valid responses. Skipping these problems..."
+        )
+    test_ids = [id for id in full_ids if id not in skip_ids]
+    print(f"Number of test problems to run: {len(test_ids)}")
+    for i, id in enumerate(test_ids):
+        print(f"********* Problem id: {id} [{i}/{len(test_ids)}] *********")
+        problem = data[id]
+        image_path = os.path.join(data_dir, problem["image"])
+        question = problem["question"]
+        options = ""
+        if len(problem["options"]) > 0:
+            assert len(problem["options"]) == 5, problem
+            if "".join(problem["options"]) != "ABCDE":
+                options = f"(A) {problem['options'][0]}\n(B) {problem['options'][1]}\n(C) {problem['options'][2]}\n(D) {problem['options'][3]}\n(E) {problem['options'][4]}\n"
+        # input = f"{question}\n{options}\nAnswer the question using a single word or phrase."
+        query = (
+            'Please solve the problem step by step based on the image and put your answer in one "\\boxed{}". If it is a multiple choice question, only one letter is allowed in the "\\boxed{}".\n'
+            + f"{question}\n{options}"
+        )
+        response = get_response(
+            model_name=model_name,
+            user_prompt=query,
+            image_path=image_path,
+            model=model,
+            processor=processor,
+        )
+
+        results[id] = problem
+        results[id]["query"] = query
+        results[id]["response"] = response
+        save_every = 1
+        if (i % save_every == 0 and i > 0) or i == len(full_ids) - 1:
+            save_json(results, output_file_path)
+
+    print("MathVision: Generating Responses - Finish")
+
+
+def generation_mathvision_refocus(model_name, output_file_path, input_file):
+    print(f"Saving results to {output_file_path}")
+    model, processor = get_model(model_name)
+    if not os.path.exists(input_file):
+        raise FileNotFoundError(f"File {input_file} not found")
+    print(f"Loading {input_file}...")
+    results = read_json(input_file)
+    full_ids = list(results.keys())
+    if os.path.exists(output_file_path):
+        print(f"Loading existing {output_file_path}...")
+        existing_results = read_json(output_file_path)
+    else:
+        existing_results = {}
+
+    skip_ids = []
+    for id, problem in existing_results.items():
+        refocus_position = problem.get("refocus_position")
+        refocus_response = problem.get("refocus_response")
+        if refocus_position is not None and refocus_response is not None:
+            results[id]["refocus_position"] = refocus_position
+            results[id]["refocus_response"] = refocus_response
+            skip_ids.append(problem["id"])
+    if len(skip_ids) > 0:
+        print(
+            f"Found existing results file with {len(skip_ids)} problems with valid refocus_response. Skipping these problems..."
+        )
+    test_ids = [id for id in full_ids if id not in skip_ids]
+    print(f"Number of test problems to run: {len(test_ids)}")
+
+    for i, id in enumerate(test_ids):
+        print(f"********* Problem id: {id} [{i}/{len(test_ids)}] *********")
+        problem = results[id]
+        query = problem["query"]
+        image_path = os.path.join("data", "mathvision", problem["image"])
+        ori_response = problem["response"]
+        refocus_position, refocus_response = refocus(
+            model_name=model_name,
+            model=model,
+            processor=processor,
+            user_prompt=query,
+            image_path=image_path,
+            ori_response=ori_response,
+        )
+        results[id]["refocus_position"] = refocus_position
+        results[id]["refocus_response"] = refocus_response
+        save_every = 1
+        if (i % save_every == 0 and i > 0) or i == len(full_ids) - 1:
+            save_json(results, output_file_path)
+
+
 def get_model(model_name):
     if model_name == "qwen2_5":
         print(f"Loading {MODEL_TO_FULLNAME[model_name]} on {DEVICE}")
-        model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
-            MODEL_TO_FULLNAME[model_name],
-            torch_dtype=torch.bfloat16,
-        ).to(DEVICE)
+        model = (
+            Qwen2_5_VLForConditionalGeneration.from_pretrained(
+                MODEL_TO_FULLNAME[model_name],
+                torch_dtype=torch.bfloat16,
+            )
+            .to(DEVICE)
+            .eval()
+        )
         processor = AutoProcessor.from_pretrained(MODEL_TO_FULLNAME[model_name])
     elif model_name == "qwen2":
         print(f"Loading {MODEL_TO_FULLNAME[model_name]} on {DEVICE}")
-        model = Qwen2VLForConditionalGeneration.from_pretrained(
-            MODEL_TO_FULLNAME[model_name],
-            torch_dtype=torch.bfloat16,
-        ).to(DEVICE)
+        model = (
+            Qwen2VLForConditionalGeneration.from_pretrained(
+                MODEL_TO_FULLNAME[model_name],
+                torch_dtype=torch.bfloat16,
+            )
+            .to(DEVICE)
+            .eval()
+        )
         processor = AutoProcessor.from_pretrained(MODEL_TO_FULLNAME[model_name])
-    elif model_name == "chameleon":
-        print(f"Loading {MODEL_TO_FULLNAME[model_name]} on {DEVICE}")
-        model = ChameleonForConditionalGeneration.from_pretrained(
-            MODEL_TO_FULLNAME[model_name],
-            torch_dtype=torch.bfloat16,
-        ).to(DEVICE)
-        processor = ChameleonProcessor.from_pretrained(MODEL_TO_FULLNAME[model_name])
     else:
         raise ValueError(f"Model {model_name} not supported")
     return model, processor
@@ -312,14 +428,6 @@ def get_response(
         )
     elif model_name == "qwen2":
         return get_response_qwen2(
-            user_prompt=user_prompt,
-            image_path=image_path,
-            model=model,
-            processor=processor,
-            cur_generation=cur_generation,
-        )
-    elif model_name == "chameleon":
-        return get_response_chameleon(
             user_prompt=user_prompt,
             image_path=image_path,
             model=model,
@@ -357,15 +465,6 @@ def get_attention(
             model=model,
             processor=processor,
         )
-    elif model_name == "chameleon":
-        return get_attention_chameleon(
-            image_path=image_path,
-            user_prompt=user_prompt,
-            cur_generation=cur_generation,
-            general_prompt=general_prompt,
-            model=model,
-            processor=processor,
-        )
     else:
         raise ValueError(f"Model {model_name} not supported")
 
@@ -381,7 +480,7 @@ def refocus(model_name, model, processor, user_prompt, image_path, ori_response)
         desc="Calculating attention of each splited sentence.",
     ):
         if sentence_idx > 100:
-            break
+            break  # 设置个bound跑得快些
         cur_generation = "\n\n".join(splited_response[: sentence_idx + 1])
         att_map = get_attention(
             model_name=model_name,
@@ -482,6 +581,24 @@ def main(args):
                 "outputs_origin_old", dataset, model_name, "extracted_answer.json"
             )
             generation_m3cot_refocus(
+                model_name=model_name,
+                output_file_path=output_file_path,
+                input_file=input_file,
+            )
+    elif dataset == "mathvision":
+        output_file_path = os.path.join(output_dir, "generated_response.json")
+        data_dir = os.path.join("data", "mathvision")
+        if period == "origin":
+            generation_mathvision_origin(
+                model_name=model_name,
+                data_dir=data_dir,
+                output_file_path=output_file_path,
+            )
+        elif period == "refocus":
+            input_file = os.path.join(
+                "outputs_origin_old", dataset, model_name, "extracted_answer.json"
+            )
+            generation_mathvision_refocus(
                 model_name=model_name,
                 output_file_path=output_file_path,
                 input_file=input_file,

@@ -1,5 +1,6 @@
 from utils.tools import (
     encode_base64,
+    load_image,
     USE_EAMPLE,
     EXAMPLE_IMAGE_PATH,
     EAMPLE_PROMPT,
@@ -10,7 +11,6 @@ import pdb
 import torch
 from qwen_vl_utils import process_vision_info
 import numpy as np
-from PIL import Image
 
 
 def prepare_qwen2_input(
@@ -20,10 +20,10 @@ def prepare_qwen2_input(
     cur_generation=None,
     additional_image_path=None,
 ):
-    image = Image.open(image_path)
+    image = load_image(image_path, resize=True)
     image_str = encode_base64(image=image)
     if USE_EAMPLE:
-        example_image = Image.open(EXAMPLE_IMAGE_PATH)
+        example_image = load_image(EXAMPLE_IMAGE_PATH, resize=True)
         example_image_str = encode_base64(image=example_image)
         user_message = [
             {

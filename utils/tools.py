@@ -4,8 +4,8 @@ from PIL import Image
 from io import BytesIO
 import re
 import time
-import jsonlines
 import torch
+import pdb
 
 MODEL_TO_FULLNAME = {
     "llava": "llava-hf/llava-1.5-7b-hf",
@@ -18,9 +18,17 @@ MODEL_TO_FULLNAME = {
 DATASET_TO_FULL_NAME = {
     "mathvista": "AI4Math/MathVista",
     "m3cot": "LightChen2333/M3CoT",
+    "mathvision": "MathLLMs/MathVision",
+}
+
+API_MODEL = {
+    "doubao": "ep-20250512113505-sd5t2",
+    "deepseek": "ep-20250422234405-ddr6w",
 }
 
 USE_EAMPLE = True
+
+MAX_IMAGE_SIZE = 1024
 
 EXAMPLE_IMAGE_PATH = (
     "/mnt/hdd/zhurui/code/Truly-Visual-CoT/data/mathvista/images/980.jpg"
@@ -30,6 +38,22 @@ EAMPLE_PROMPT = "When you output <REFOCUS>, revisit the picture and check some k
 MAX_TOKENS = 5000
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+
+def load_image(img_path, resize=False):
+    img = Image.open(img_path)
+    width, height = img.size
+
+    if resize and max(width, height) > MAX_IMAGE_SIZE:
+        scaling_factor = MAX_IMAGE_SIZE / float(max(width, height))
+        new_width = int(width * scaling_factor)
+        new_height = int(height * scaling_factor)
+        img = img.resize((new_width, new_height), Image.LANCZOS)
+        print(
+            f"Image {img_path} is resized to {new_width}x{new_height} from {width}x{height}"
+        )
+
+    return img
 
 
 def read_json(path):

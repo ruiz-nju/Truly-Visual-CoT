@@ -1,5 +1,6 @@
 from utils.tools import (
     encode_base64,
+    load_image,
     USE_EAMPLE,
     EXAMPLE_IMAGE_PATH,
     EAMPLE_PROMPT,
@@ -24,10 +25,10 @@ def prepare_qwen2_5_input(
     Prepare the input for Qwen2.5VL.
     """
 
-    image = Image.open(image_path)
+    image = load_image(image_path, resize=True)
     image_str = encode_base64(image=image)
     if USE_EAMPLE:
-        example_image = Image.open(EXAMPLE_IMAGE_PATH)
+        example_image = load_image(EXAMPLE_IMAGE_PATH, resize=True)
         example_image_str = encode_base64(image=example_image)
         user_message = [
             {
